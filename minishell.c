@@ -17,15 +17,14 @@ int main()
 	mini.path = get_path();
 	while ( 1 )
 	{
-		input = readline("Enter text: ");
+		input = readline("$ ");
 		if (input == NULL)
 		{
-			rl_clear_history();
-			return 0;
+			break;
 		}
 		add_history(input);
-		// free(input);
 		char **args = ft_split(input, ' ');
+		free(input);
 		char *exec = find_exec(args[0], mini.path);
 		if(!exec)
 		{
@@ -36,14 +35,14 @@ int main()
 		if(pid > 0)
 		{
 			waitpid(pid, &ret, 0);
+			ft_split_free(args);
+			free(exec);
 		}
 		else {
 			execve(exec, args, NULL);
 		}
-		// printf("%s", input);
-		// printf("\n");
 	}
-
+	ft_split_free(mini.path);
 	return 0;
 
 }

@@ -5,12 +5,12 @@ SOURCES  := $(wildcard *.c) $(wildcard libft/*.c)
 OBJECTS = $(SOURCES:.c=.o)
 
 CC = gcc
-CFLAGS = -Wall -Wextra -g -I. -I./libft -Werror -lreadline -fsanitize=address -fsanitize=undefined
+CFLAGS = -Wall -Wextra -g -I. -I./libft -Werror  -I/usr/local/include   #-fsanitize=address -fsanitize=undefined
 
 all: $(NAME)
 
 $(NAME): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $(OBJECTS)
+	$(CC) $(OBJECTS)  $(CFLAGS) -lreadline -o $@ 
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $? -o $@
