@@ -1,0 +1,26 @@
+     1	NAME = minishell
+
+     2	SOURCES  := $(wildcard *.c) $(wildcard libft/*.c)
+
+     3	OBJECTS = $(SOURCES:.c=.o)
+
+     4	CC = gcc
+     5	CFLAGS = -Wall -Wextra -g -I. -I./libft -Werror -lreadline -fsanitize=address -fsanitize=undefined
+
+     6	all: $(NAME)
+
+     7	$(NAME): $(OBJECTS)
+     8		$(CC) $(CFLAGS) -o $@ $(OBJECTS)
+
+     9	%.o: %.c
+    10		$(CC) -c $(CFLAGS) $? -o $@
+
+    11	clean:
+    12		rm -f $(OBJECTS)
+
+    13	fclean: clean
+    14		rm -f $(NAME)
+
+    15	re: fclean all
+
+    16	.PHONY: all bonus clean fclean re
