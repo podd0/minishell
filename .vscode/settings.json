@@ -3,6 +3,7 @@
 		"*.sage": "python",
 		"readline.h": "c",
 		"history.h": "c",
-		"wait.h": "c"
+		"wait.h": "c",
+		"minishell.h": "c"
 	}
 }
