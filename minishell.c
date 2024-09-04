@@ -8,12 +8,24 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 
+void	crtlc(int signal)
+{
+	printf("\n");
+	(void)signal;
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+
+}
+
+
 int main()
 {
 	char 	*input;
 	t_mini	mini;
 
 	mini.path = get_path();
+	signal(SIGINT, crtlc);
 	while ( 1 )
 	{
 		input = readline("$ ");
