@@ -1,11 +1,11 @@
 NAME = minishell
 
-SOURCES  := $(wildcard *.c) $(wildcard libft/*.c)
+SOURCES  := $(wildcard *.c) $(wildcard libft/*.c) $(wildcard libft/vector/*.c)
 
 OBJECTS = $(SOURCES:.c=.o)
 
 CC = gcc
-CFLAGS = -Wall -Wextra -g -I. -I./libft -Werror  -I/usr/local/include   -fsanitize=address -fsanitize=undefined
+CFLAGS = -Wall -Wextra -g -I. -I./libft -Werror  -I/usr/local/include -fsanitize=address -fsanitize=undefined
 
 all: $(NAME)
 

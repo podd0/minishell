@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/17 02:39:20 by apuddu            #+#    #+#             */
-/*   Updated: 2024/08/17 02:39:20 by apuddu           ###   ########.fr       */
+/*   Created: 2024/09/04 20:18:10 by apuddu            #+#    #+#             */
+/*   Updated: 2024/09/04 20:18:10 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,46 +98,25 @@ void					vstr_map(t_vstr *vec, void (*f)(char *));
 void					vstr_map_sub(t_vstr *vec, char *(*f)(char *));
 char					*vstr_back(t_vstr *vec);
 
-struct					s_vu
+struct					s_vch
 {
-	unsigned int		*arr;
+	char				*arr;
 	int					size;
 	int					buf_size;
 };
 
-typedef struct s_vu		t_vu;
+typedef struct s_vch	t_vch;
 
-void					vu_push_back(t_vu *vec, unsigned int elem);
-unsigned int			vu_pop_back(t_vu *vec);
-void					vu_assign(t_vu *vec, int n, unsigned int value);
-void					vu_resize(t_vu *vec, int n);
-t_vu					*vu_init(int n, unsigned int value);
-t_vu					*vu_uninit(int n);
-void					vu_free(t_vu *vec);
-t_vu					*vu_copy(t_vu *vec);
-void					vu_map(t_vu *vec, void (*f)(unsigned int));
-void					vu_map_sub(t_vu *vec, unsigned int (*f)(unsigned int));
-unsigned int			vu_back(t_vu *vec);
-
-struct					s_vvu
-{
-	t_vu				**arr;
-	int					size;
-	int					buf_size;
-};
-
-typedef struct s_vvu	t_vvu;
-
-void					vvu_push_back(t_vvu *vec, t_vu *elem);
-t_vu					*vvu_pop_back(t_vvu *vec);
-void					vvu_assign(t_vvu *vec, int n, t_vu *value);
-void					vvu_resize(t_vvu *vec, int n);
-t_vvu					*vvu_init(int n, t_vu *value);
-t_vvu					*vvu_uninit(int n);
-void					vvu_free(t_vvu *vec);
-t_vvu					*vvu_copy(t_vvu *vec);
-void					vvu_map(t_vvu *vec, void (*f)(t_vu *));
-void					vvu_map_sub(t_vvu *vec, t_vu *(*f)(t_vu *));
-t_vu					*vvu_back(t_vvu *vec);
+void					vch_push_back(t_vch *vec, char elem);
+char					vch_pop_back(t_vch *vec);
+void					vch_assign(t_vch *vec, int n, char value);
+void					vch_resize(t_vch *vec, int n);
+t_vch					*vch_init(int n, char value);
+t_vch					*vch_uninit(int n);
+void					vch_free(t_vch *vec);
+t_vch					*vch_copy(t_vch *vec);
+void					vch_map(t_vch *vec, void (*f)(char));
+void					vch_map_sub(t_vch *vec, char (*f)(char));
+char					vch_back(t_vch *vec);
 
 #endif

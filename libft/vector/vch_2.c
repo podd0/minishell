@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vvu_2.c                                            :+:      :+:    :+:   */
+/*   vch_2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/17 02:39:22 by apuddu            #+#    #+#             */
-/*   Updated: 2024/08/17 02:39:22 by apuddu           ###   ########.fr       */
+/*   Created: 2024/09/04 20:18:11 by apuddu            #+#    #+#             */
+/*   Updated: 2024/09/04 20:18:11 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-t_vu	*vvu_back(t_vvu *vec)
+char	vch_back(t_vch *vec)
 {
 	return (vec->arr[vec->size - 1]);
 }
 
-void	vvu_map_sub(t_vvu *vec, t_vu *(*f)(t_vu *))
+void	vch_map_sub(t_vch *vec, char (*f)(char))
 {
 	int	i;
 
