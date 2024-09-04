@@ -5,6 +5,7 @@
 		"history.h": "c",
 		"wait.h": "c",
 		"minishell.h": "c",
-		"stdio.h": "c"
+		"stdio.h": "c",
+		"vector.h": "c"
 	}
 }
