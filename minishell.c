@@ -23,7 +23,10 @@ int main()
 		}
 		add_history(input);
 		char **args = ft_split(input, ' ');
-		exec_cmd(args, &mini);
+		if (args[0] != NULL)
+		{
+			exec_cmd(args, &mini);
+		}
 		ft_split_free(args);
 		free(input);
 	}
