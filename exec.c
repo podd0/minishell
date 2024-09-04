@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:17:58 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/04 19:29:22 by epiacent         ###   ########.fr       */
+/*   Updated: 2024/09/04 19:45:19 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void exec_cmd(char **args, t_mini *mini)
 	if(!exec)
 	{
 		printf("%s: command not found\n", args[0]);
-		//free(args[0]);
 		return;
 	}
 	free(args[0]);
@@ -34,6 +33,7 @@ void exec_cmd(char **args, t_mini *mini)
 	}
 	else {
 		execve(exec, args, NULL);
+		exit(1);
 	}
 		
 }
