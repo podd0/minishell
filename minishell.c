@@ -12,7 +12,6 @@ int main()
 {
 	char 	*input;
 	t_mini	mini;
-	int ret;
 
 	mini.path = get_path();
 	while ( 1 )
@@ -24,25 +23,10 @@ int main()
 		}
 		add_history(input);
 		char **args = ft_split(input, ' ');
+		exec_cmd(args, &mini);
+		ft_split_free(args);
 		free(input);
-		char *exec = find_exec(args[0], mini.path);
-		if(!exec)
-		{
-			printf("%s: command not found\n", args[0]);
-			continue;
-		}
-		int pid = fork();
-		if(pid > 0)
-		{
-			waitpid(pid, &ret, 0);
-			ft_split_free(args);
-			free(exec);
-		}
-		else {
-			execve(exec, args, NULL);
-		}
 	}
 	ft_split_free(mini.path);
 	return 0;
-
 }

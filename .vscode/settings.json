@@ -4,6 +4,7 @@
 		"readline.h": "c",
 		"history.h": "c",
 		"wait.h": "c",
-		"minishell.h": "c"
+		"minishell.h": "c",
+		"stdio.h": "c"
 	}
 }

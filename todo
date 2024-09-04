@@ -1,0 +1,6 @@
+
+tokenizzare 
+
+ogni token tranne PIPE ha sostituzioni
+
+handle ctrl+c, ctrl+\
