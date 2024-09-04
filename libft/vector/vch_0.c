@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vlu_0.c                                            :+:      :+:    :+:   */
+/*   vch_0.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void	vlu_push_back(t_vlu *vec, long unsigned int elem)
+void	vch_push_back(t_vch *vec, char elem)
 {
 	int	new_buf_size;
 	int	c_size;
@@ -26,14 +26,14 @@ void	vlu_push_back(t_vlu *vec, long unsigned int elem)
 		new_buf_size = vec->buf_size;
 		if (new_buf_size < 16)
 			new_buf_size = 16;
-		vlu_resize(vec, new_buf_size * 2);
+		vch_resize(vec, new_buf_size * 2);
 		vec->size = c_size;
 	}
 	vec->arr[vec->size] = elem;
 	vec->size++;
 }
 
-long unsigned int	vlu_pop_back(t_vlu *vec)
+char	vch_pop_back(t_vch *vec)
 {
 	if (vec->size == 0)
 	{
@@ -44,7 +44,7 @@ long unsigned int	vlu_pop_back(t_vlu *vec)
 	return (vec->arr[vec->size]);
 }
 
-void	vlu_assign(t_vlu *vec, int n, long unsigned int value)
+void	vch_assign(t_vch *vec, int n, char value)
 {
 	int	i;
 
@@ -52,7 +52,7 @@ void	vlu_assign(t_vlu *vec, int n, long unsigned int value)
 	vec->size = n;
 	vec->buf_size = n;
 	free(vec->arr);
-	vec->arr = safe_alloc(n * sizeof(long unsigned int));
+	vec->arr = safe_alloc(n * sizeof(char));
 	while (i < n)
 	{
 		vec->arr[i] = value;
@@ -60,14 +60,14 @@ void	vlu_assign(t_vlu *vec, int n, long unsigned int value)
 	}
 }
 
-void	vlu_resize(t_vlu *vec, int n)
+void	vch_resize(t_vch *vec, int n)
 {
-	t_vlu	old;
+	t_vch	old;
 
 	old = *vec;
 	vec->size = n;
 	vec->buf_size = n;
-	vec->arr = safe_alloc(n * sizeof(long unsigned int));
-	ft_memcpy(vec->arr, old.arr, old.size * sizeof(long unsigned int));
+	vec->arr = safe_alloc(n * sizeof(char));
+	ft_memcpy(vec->arr, old.arr, old.size * sizeof(char));
 	free(old.arr);
 }

@@ -1,33 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vstr_2.c                                           :+:      :+:    :+:   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/04 18:08:46 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/04 18:08:46 by apuddu           ###   ########.fr       */
+/*   Created: 2024/09/04 17:49:23 by apuddu            #+#    #+#             */
+/*   Updated: 2024/09/04 17:49:39 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "vector.h"
-#include <stdlib.h>
-#include <unistd.h>
+#include <minishell.h>
 
-char	*vstr_back(t_vstr *vec)
+int main()
 {
-	return (vec->arr[vec->size - 1]);
-}
-
-void	vstr_map_sub(t_vstr *vec, char *(*f)(char *))
-{
-	int	i;
-
-	i = 0;
-	while (i < vec->size)
-	{
-		vec->arr[i] = f(vec->arr[i]);
-		i++;
-	}
+	
 }

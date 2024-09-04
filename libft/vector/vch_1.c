@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vlu_1.c                                            :+:      :+:    :+:   */
+/*   vch_1.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -15,45 +15,45 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-t_vlu	*vlu_init(int n, long unsigned int value)
+t_vch	*vch_init(int n, char value)
 {
-	t_vlu	*res;
+	t_vch	*res;
 
-	res = malloc(sizeof(t_vlu));
-	*res = (t_vlu){0, 0, 0};
-	vlu_assign(res, n, value);
+	res = malloc(sizeof(t_vch));
+	*res = (t_vch){0, 0, 0};
+	vch_assign(res, n, value);
 	return (res);
 }
 
-t_vlu	*vlu_uninit(int n)
+t_vch	*vch_uninit(int n)
 {
-	t_vlu	*res;
+	t_vch	*res;
 
-	res = malloc(sizeof(t_vlu));
-	*res = (t_vlu){0, 0, 0};
-	vlu_resize(res, n);
+	res = malloc(sizeof(t_vch));
+	*res = (t_vch){0, 0, 0};
+	vch_resize(res, n);
 	return (res);
 }
 
-void	vlu_free(t_vlu *vec)
+void	vch_free(t_vch *vec)
 {
 	free(vec->arr);
 	free(vec);
 }
 
-t_vlu	*vlu_copy(t_vlu *vec)
+t_vch	*vch_copy(t_vch *vec)
 {
-	t_vlu	*res;
+	t_vch	*res;
 
-	res = safe_alloc(sizeof(t_vlu));
+	res = safe_alloc(sizeof(t_vch));
 	res->size = vec->size;
 	res->buf_size = vec->buf_size;
-	res->arr = safe_alloc(sizeof(long unsigned int) * vec->buf_size);
-	ft_memmove(res->arr, vec->arr, sizeof(long unsigned int) * vec->size);
+	res->arr = safe_alloc(sizeof(char) * vec->buf_size);
+	ft_memmove(res->arr, vec->arr, sizeof(char) * vec->size);
 	return (res);
 }
 
-void	vlu_map(t_vlu *vec, void (*f)(long unsigned int))
+void	vch_map(t_vch *vec, void (*f)(char))
 {
 	int	i;
 
