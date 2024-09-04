@@ -1,33 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vvu_2.c                                            :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/17 02:39:22 by apuddu            #+#    #+#             */
-/*   Updated: 2024/08/17 02:39:22 by apuddu           ###   ########.fr       */
+/*   Created: 2024/09/04 18:31:38 by apuddu            #+#    #+#             */
+/*   Updated: 2024/09/04 20:21:19 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "vector.h"
-#include <stdlib.h>
-#include <unistd.h>
+#include <minishell.h>
 
-t_vu	*vvu_back(t_vvu *vec)
+// unimplemented
+char	*subst_env(char* line, char **env)
 {
-	return (vec->arr[vec->size - 1]);
-}
-
-void	vvu_map_sub(t_vvu *vec, t_vu *(*f)(t_vu *))
-{
-	int	i;
-
-	i = 0;
-	while (i < vec->size)
-	{
-		vec->arr[i] = f(vec->arr[i]);
-		i++;
-	}
+	(void)env;
+	return (line);
 }
