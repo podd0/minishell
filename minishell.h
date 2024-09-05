@@ -6,20 +6,23 @@
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:59:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/05 14:29:04 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/05 19:34:53 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <unistd.h>
-#include <libft.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <stdlib.h>
+
+# include <stdio.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <unistd.h>
+# include <libft.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <stdlib.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 
 # define ARG 1
 # define PIPE 2
@@ -28,6 +31,9 @@
 # define APPEND 5
 # define DOCUMENT 6
 # define END 0
+
+extern int	g_proc_running;
+
 
 typedef struct s_token
 {
@@ -42,14 +48,22 @@ typedef struct s_mini
 	char	**path;
 	int		status_last; 
 	char	**env;
+	t_token	*tokens;
 }	t_mini;
 
 typedef struct s_command
 {
 	char	**args;
+	char	*separator;
 	int		fd_out;
 	int		fd_in;
 }	t_command;
+
+typedef struct s_commands
+{
+	t_command	*arr;
+	int			size;
+}	t_commands;
 
 char	**get_path(void);
 char	*find_exec(char *cmd, char **path);
@@ -60,5 +74,9 @@ char	*subst_env(char* line, char **env);
 t_token	*tokenize(char *line, t_mini *mini);
 void	free_tokens(t_token *token);
 
+
+t_commands	to_command_array(t_token *tokens);
+void		free_commands(t_commands commands);
+void		exec_shell_line(t_commands	commands, t_mini *mini);
 
 #endif

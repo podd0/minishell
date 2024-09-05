@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:49:23 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/05 14:22:30 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/05 17:29:25 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,8 +151,9 @@ t_token	*tokenize(char *line, t_mini *mini)
 
 void	free_tokens(t_token *token)
 {
-	if(token->next)
-		free_tokens(token->next);
+	if(!token)
+		return;
+	free_tokens(token->next);
 	free(token->value);
 	free(token);
 }

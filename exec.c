@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:17:58 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/04 19:45:19 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/05 20:06:33 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 void exec_cmd(char **args, t_mini *mini)
 {
-	int		ret;
 	char	*exec;
-	
+
 	exec = find_exec(args[0], mini->path);
 	if(!exec)
 	{
@@ -25,15 +24,66 @@ void exec_cmd(char **args, t_mini *mini)
 	}
 	free(args[0]);
 	args[0] = exec;
-	int pid = fork();
-	if(pid > 0)
+	execve(exec, args, NULL);
+}
+void	clean_exit(t_mini *mini, t_commands commands, int status)
+{
+	free_commands(commands);
+	free_tokens(mini->tokens);
+	exit(status);
+}
+
+void	exec_command(t_command *command, t_mini *mini)
+{
+	// printf("redirect STDIN %d %d\n",STDIN_FILENO, command->fd_in);
+	dup2(command->fd_in, STDIN_FILENO);
+	dup2(command->fd_out, STDOUT_FILENO);
+	// printf("redirect STDOUT %d %d\n",STDOUT_FILENO, command->fd_out);
+	exec_cmd(command->args, mini);
+}
+
+void	exec_commands(t_commands commands, t_mini *mini)
+{
+	int	i;
+	int	pid;
+
+	i = 0;
+	while (i < commands.size-1)
 	{
+		// TODO : handle pipes
+		pid = fork();
+		if (pid < 0)
+			clean_exit(mini, commands, 1);
+		else if (pid == 0)
+		{
+			exec_command(commands.arr + i, mini);
+			clean_exit(mini, commands, 1);
+		}
+		i++;
+	}
+	exec_command(commands.arr + i, mini);
+	clean_exit(mini, commands, 1);
+}
+
+void	exec_shell_line(t_commands	commands, t_mini *mini)
+{
+	int	pid;
+	int	ret;
+
+	pid = fork();
+	if (pid < 0)
+		clean_exit(mini, commands, 1);
+	if(pid == 0)
+	{
+		exec_commands(commands, mini);
+		
+	}
+	else
+	{
+		g_proc_running = 1;
 		waitpid(pid, &ret, 0);
+		g_proc_running = 0;
 		mini->status_last = (ret & 0xff00) >> 8;
 	}
-	else {
-		execve(exec, args, NULL);
-		exit(1);
-	}
-		
+
 }
