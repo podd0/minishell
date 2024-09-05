@@ -34,12 +34,20 @@ int main()
 			break;
 		}
 		add_history(input);
-		char **args = ft_split(input, ' ');
-		if (args[0] != NULL)
+		// char **args = ft_split(input, ' ');
+		// if (args[0] != NULL)
+		// {
+		// 	exec_cmd(args, &mini);
+		// }
+		// ft_split_free(args);
+		t_token *tokens = tokenize(input, &mini);
+		t_token *cp = tokens;
+		while(tokens)
 		{
-			exec_cmd(args, &mini);
+			printf("TYPE = %d, value = %s\n", tokens->type, tokens->value);
+			tokens = tokens->next;
 		}
-		ft_split_free(args);
+		free_tokens(cp);
 		free(input);
 	}
 	ft_split_free(mini.path);

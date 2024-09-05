@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:59:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/04 19:13:11 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/05 14:29:04 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ void	exec_cmd(char **args, t_mini *mini);
 
 
 char	*subst_env(char* line, char **env);
+t_token	*tokenize(char *line, t_mini *mini);
+void	free_tokens(t_token *token);
 
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:49:23 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/04 20:23:11 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/05 14:22:30 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*skip_whitespace(char *line)
 	return (line);
 }
 
-char	*match_until(char **line, char *charset)
+char	*match_until(char **line, char *charset, int skip)
 {
 	t_vch	*buf;
 	char	*res;
@@ -29,12 +29,16 @@ char	*match_until(char **line, char *charset)
 	while (**line && !ft_strchr(charset, **line))
 	{
 		vch_push_back(buf, **line);
+		(*line)++;
 	}
+	if (**line)
+		(*line) += skip;
 	vch_push_back(buf, '\0');
 	res = buf->arr;
 	free(buf);
 	return res;
 }
+
 int	check_out(char **line)
 {
 	char	*s;
@@ -53,9 +57,6 @@ int	check_out(char **line)
 	return (ARG);
 
 }
-
-
-
 int	get_type(char **line)
 {
 	char	*s;
@@ -80,29 +81,41 @@ int	get_type(char **line)
 	}
 	return (check_out(line));
 }
+t_token	*token_init(char **line)
+{
+	t_token *token;
+	
+	token = malloc(sizeof(t_token));
+	token->type = get_type(line);
+	token->value = NULL;
+	token->next = NULL;
+	token->prev = NULL;
+	return (token);
+}
 
 t_token	*match_token(char **line, t_mini *mini)
 {
 	t_token *token;
 
-	token = malloc(sizeof(t_token));
-	token->type = get_type(line);
+	token = token_init(line);
 	if (token->type == PIPE)
 		return (token);
+	if(**line == '\0')
+		return (NULL);
 	if (**line == '\'')
 	{
 		(*line)++;
-		token->value = match_until(line, "'");
+		token->value = match_until(line, "'", 1);
 	}
 	else if (**line == '"')
 	{
 		(*line)++;
-		token->value = match_until(line, "\"");
+		token->value = match_until(line, "\"", 1);
 		token->value = subst_env(token->value, mini->env);
 	}
 	else
 	{
-		token->value = match_until(line, "\"' <>|");
+		token->value = match_until(line, "\"' <>|", 0);
 		token->value = subst_env(token->value, mini->env);
 	}
 	return (token);
@@ -117,18 +130,29 @@ t_token	*tokenize(char *line, t_mini *mini)
 	head = NULL;
 	tail = NULL;
 	line = skip_whitespace(line);
-	while(line)
+	while(*line)
 	{
 		curr = match_token(&line, mini);
+		curr->next = NULL;
+		if (!curr)
+			break;
 		if (!head)
 			head = curr;
+		curr->prev = tail;
 		if(tail)
 		{
 			tail->next = curr;
-			curr->prev = tail;
 		}
 		tail = curr;
 		line = skip_whitespace(line);
 	}
 	return (head);
+}
+
+void	free_tokens(t_token *token)
+{
+	if(token->next)
+		free_tokens(token->next);
+	free(token->value);
+	free(token);
 }
