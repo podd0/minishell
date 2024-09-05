@@ -22,12 +22,20 @@ void	crtlc(int signal)
 	}
 }
 
-int main()
+int main(int argc, char **argv, char **env)
 {
 	char 		*input;
 	t_mini		mini;
 	t_commands	commands;
 
+	(void)argc;
+	(void)argv;
+	(void)env;
+	// while(*env)
+	// {
+	// 	printf("%s\n", *env);
+	// 	env++;
+	// }
 	mini.path = get_path();
 	signal(SIGINT, crtlc);
 	while ( 1 )
