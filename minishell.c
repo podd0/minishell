@@ -1,12 +1,4 @@
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 #include <minishell.h>
-#include <unistd.h>
-#include <libft.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <stdlib.h>
 
 int	g_proc_running = 0;
 
@@ -30,13 +22,9 @@ int main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
-	(void)env;
-	// while(*env)
-	// {
-	// 	printf("%s\n", *env);
-	// 	env++;
-	// }
-	mini.path = get_path();
+	mini.env = env;
+	
+	mini.path = get_path(env);
 	signal(SIGINT, crtlc);
 	while ( 1 )
 	{

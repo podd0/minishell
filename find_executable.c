@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_executable.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:15:13 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/04 17:25:35 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/06 14:46:59 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,8 @@ char	*find_exec(char *cmd, char **path)
 	return (exec);
 }
 
-char	**get_path(void)
+char	**get_path(char **environ)
 {
-	extern char	**environ;
-
 	while (ft_strncmp(*environ, "PATH=", 5))
 		environ++;
 	return (ft_split((*environ) + 5, ':'));

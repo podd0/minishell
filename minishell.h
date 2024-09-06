@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:59:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/05 19:34:53 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/06 14:49:13 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <signal.h>
 
 # define ARG 1
 # define PIPE 2
@@ -65,7 +66,7 @@ typedef struct s_commands
 	int			size;
 }	t_commands;
 
-char	**get_path(void);
+char	**get_path(char **env);
 char	*find_exec(char *cmd, char **path);
 void	exec_cmd(char **args, t_mini *mini);
 
