@@ -6,6 +6,11 @@
 		"wait.h": "c",
 		"minishell.h": "c",
 		"stdio.h": "c",
-		"vector.h": "c"
+		"vector.h": "c",
+		"types.h": "c",
+		"signal.h": "c",
+		"unistd.h": "c",
+		"libft.h": "c",
+		"typeinfo": "c"
 	}
 }

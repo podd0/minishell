@@ -22,7 +22,7 @@ int main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
-	mini.env = env;
+	set_env(&mini, env);
 	
 	mini.path = get_path(env);
 	signal(SIGINT, crtlc);
@@ -52,5 +52,7 @@ int main(int argc, char **argv, char **env)
 		free(input);
 	}
 	ft_split_free(mini.path);
+	vstr_map(mini.env, (void (*)(char *)) free);
+	vstr_free(mini.env);
 	return 0;
 }

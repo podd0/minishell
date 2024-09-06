@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:49:23 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/05 17:29:25 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/06 17:40:18 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-#include <vector.h>
 
 char	*skip_whitespace(char *line)
 {
@@ -93,15 +92,8 @@ t_token	*token_init(char **line)
 	return (token);
 }
 
-t_token	*match_token(char **line, t_mini *mini)
+void	match_and_sub(t_token *token, char **line, t_mini *mini)
 {
-	t_token *token;
-
-	token = token_init(line);
-	if (token->type == PIPE)
-		return (token);
-	if(**line == '\0')
-		return (NULL);
 	if (**line == '\'')
 	{
 		(*line)++;
@@ -111,13 +103,27 @@ t_token	*match_token(char **line, t_mini *mini)
 	{
 		(*line)++;
 		token->value = match_until(line, "\"", 1);
-		token->value = subst_env(token->value, mini->env);
+		if (token->type != DOCUMENT)
+			token->value = subst_env(token->value, mini->env->arr, mini);
 	}
 	else
 	{
 		token->value = match_until(line, "\"' <>|", 0);
-		token->value = subst_env(token->value, mini->env);
+		if (token->type != DOCUMENT)
+			token->value = subst_env(token->value, mini->env->arr, mini);
 	}
+}
+
+t_token	*match_token(char **line, t_mini *mini)
+{
+	t_token *token;
+
+	token = token_init(line);
+	if (token->type == PIPE)
+		return (token);
+	if(**line == '\0')
+		return (NULL);
+	match_and_sub(token, line, mini);
 	return (token);
 }
 

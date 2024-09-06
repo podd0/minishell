@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:17:58 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/06 14:39:19 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/06 18:24:50 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,18 @@ void	clean_exit(t_mini *mini, t_commands commands, int status)
 {
 	free_commands(commands);
 	free_tokens(mini->tokens);
+	vstr_map(mini->env, (void (*)(char *)) free);
+	vstr_free(mini->env);
 	exit(status);
 }
 
-void	exec_command(t_command *command, t_mini *mini)
+void	exec_command(t_command *command, t_mini *mini, int *fd)
 {
+	if (fd)
+	{
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[0]);
+	}
 	dup2(command->fd_in, STDIN_FILENO);
 	dup2(command->fd_out, STDOUT_FILENO);
 	exec_cmd(command->args, mini);
@@ -56,16 +63,16 @@ void	exec_commands(t_commands commands, t_mini *mini)
 			clean_exit(mini, commands, 1);
 		else if (pid == 0)
 		{
-			dup2(fd[1], STDOUT_FILENO);
-			close(fd[0]);
-			exec_command(commands.arr + i, mini);
+			exec_command(commands.arr + i, mini, fd);
 			clean_exit(mini, commands, 1);
 		}
+		if (commands.arr[i].has_document)
+			close(commands.arr[i].fd_in);
 		dup2(fd[0], STDIN_FILENO);
 		close(fd[1]);
 		i++;
 	}
-	exec_command(commands.arr + i, mini);
+	exec_command(commands.arr + i, mini, NULL);
 	clean_exit(mini, commands, 1);
 }
 

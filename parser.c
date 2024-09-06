@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:33:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/05 20:04:47 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/06 18:37:18 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ t_command	*init_commands(int count)
 	{
 		commands[i].fd_in = STDIN_FILENO;
 		commands[i].fd_out = STDOUT_FILENO;
-		commands[i].separator = NULL;
+		commands[i].has_document = 0;
+		commands[i].args = NULL;
 		i++;
 	}
 	return commands;
@@ -75,7 +76,31 @@ t_token	*next_arg(t_token *token)
 	return (token);
 }
 
-void	make_single_command(t_command *command, t_token *tokens)
+int	here_document(t_command *command, char *separator)
+{
+	int		fd[2];
+	char 	*line;
+
+	if (pipe(fd) == -1)
+		return (1);
+	command->has_document = 1;
+	command->fd_in = fd[0];
+	while ( 1 )
+	{
+		line = readline("> ");
+		if (!line)
+			ft_putendl_fd("waring : here document closed by end of file", STDERR_FILENO);
+		if (!line || ft_strncmp(line, separator, ft_strlen(separator)) == 0)
+			break;
+		ft_putendl_fd(line, fd[1]);
+		free(line);
+	}
+	close(fd[1]);
+	free(line);
+	return (0);
+}
+
+int	make_single_command(t_command *command, t_token *tokens)
 {
 	int	argc;
 	int	i;
@@ -86,13 +111,13 @@ void	make_single_command(t_command *command, t_token *tokens)
 	while (tokens && tokens->type != PIPE)
 	{
 		if (tokens->type == ARG)
-		{
-			command->args[i] = ft_strdup(tokens->value);
-			i++;
-		}
+			command->args[i++] = ft_strdup(tokens->value);
 		else if (tokens->type == DOCUMENT)
-			command->separator = ft_strdup(tokens->value);
-		else if (tokens->type == IN && !command->separator)
+		{
+			if(here_document(command, tokens->value))
+				return (1);
+		}
+		else if (tokens->type == IN && !command->has_document)
 			command->fd_in = open(tokens->value, O_RDONLY);
 		else if (tokens->type == OUT)
 			command->fd_out = open(tokens->value, O_WRONLY|O_CREAT|O_TRUNC, 0666);
@@ -101,6 +126,7 @@ void	make_single_command(t_command *command, t_token *tokens)
 		tokens = tokens->next;
 	}
 	command->args[argc] = NULL;
+	return (0);
 }
 
 int	check_okay(t_commands	commands)
@@ -119,7 +145,7 @@ int	check_okay(t_commands	commands)
 	return (1);
 }
 
-t_commands	to_command_array(t_token *tokens)
+t_commands	to_command_array(t_token *tokens, t_mini *mini)
 {
 	t_command	*command_arr;
 	int			count;
@@ -129,25 +155,20 @@ t_commands	to_command_array(t_token *tokens)
 	count = num_commands(tokens);
 	command_arr = init_commands(count);
 	i = 0;
+	commands = (t_commands){command_arr, count};
 	while(i < count)
 	{
-		make_single_command(command_arr + i, tokens);
+		if (make_single_command(command_arr + i, tokens))
+			clean_exit(mini, commands, 1);
 		tokens = next_command(tokens);
 		i++;
 	}
-	commands = (t_commands){command_arr, count};
 	if (!check_okay(commands))
 	{
 		free_commands(commands);
 		return ((t_commands){NULL, -1});
 	}
 	return (commands);
-}
-
-void	free_command(t_command *command)
-{
-	free(command->separator);
-	ft_split_free(command->args);
 }
 
 void	free_commands(t_commands commands)
@@ -157,7 +178,7 @@ void	free_commands(t_commands commands)
 	i = 0;
 	while (i < commands.size)
 	{
-		free_command(commands.arr + i);
+		ft_split_free(commands.arr[i].args);
 		i++;
 	}
 	free(commands.arr);
