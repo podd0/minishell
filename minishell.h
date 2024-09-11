@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:59:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/06 18:26:28 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/11 20:19:51 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@
 
 extern int	g_proc_running;
 
-
 typedef struct s_token
 {
 	struct s_token	*prev;
@@ -59,6 +58,9 @@ typedef struct s_command
 	int		has_document;
 	int		fd_out;
 	int		fd_in;
+	int		pid;
+	int		*pipe_in;
+	int		*pipe_out;
 }	t_command;
 
 typedef struct s_commands
@@ -66,6 +68,8 @@ typedef struct s_commands
 	t_command	*arr;
 	int			size;
 }	t_commands;
+
+typedef void (*t_builtin)(t_command *command, t_mini *mini);
 
 char	**get_path(char **env);
 char	*find_exec(char *cmd, char **path);

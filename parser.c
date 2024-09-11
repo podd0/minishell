@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:33:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/06 18:37:18 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/11 20:28:04 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,9 @@ t_command	*init_commands(int count)
 		commands[i].fd_out = STDOUT_FILENO;
 		commands[i].has_document = 0;
 		commands[i].args = NULL;
+		commands[i].pipe_in = NULL;
+		commands[i].pipe_out = NULL;
+		commands[i].pid = 0;
 		i++;
 	}
 	return commands;
@@ -89,7 +92,7 @@ int	here_document(t_command *command, char *separator)
 	{
 		line = readline("> ");
 		if (!line)
-			ft_putendl_fd("waring : here document closed by end of file", STDERR_FILENO);
+			ft_putendl_fd("warning : here document closed by end of file", STDERR_FILENO);
 		if (!line || ft_strncmp(line, separator, ft_strlen(separator)) == 0)
 			break;
 		ft_putendl_fd(line, fd[1]);
@@ -179,6 +182,8 @@ void	free_commands(t_commands commands)
 	while (i < commands.size)
 	{
 		ft_split_free(commands.arr[i].args);
+		free(commands.arr[i].pipe_in);
+		free(commands.arr[i].pipe_out);
 		i++;
 	}
 	free(commands.arr);

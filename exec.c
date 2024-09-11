@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:17:58 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/11 17:05:50 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/11 20:28:56 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,70 +35,112 @@ void	clean_exit(t_mini *mini, t_commands commands, int status)
 	exit(status);
 }
 
-void	exec_command(t_command *command, t_mini *mini, int *fd)
+void	exec_command(t_command *command, t_mini *mini)
 {
-	if (fd)
+	if (command->pipe_in)
 	{
-		dup2(fd[1], STDOUT_FILENO);
-		close(fd[0]);
+		dup2(command->pipe_in[0], STDIN_FILENO);
+		close(command->pipe_in[1]);
+	}
+	if (command->pipe_out)
+	{
+		dup2(command->pipe_out[1], STDOUT_FILENO);
+		close(command->pipe_out[0]);
 	}
 	dup2(command->fd_in, STDIN_FILENO);
 	dup2(command->fd_out, STDOUT_FILENO);
 	exec_cmd(command->args, mini);
 }
 
+static void pass(t_command *command, t_mini *mini)
+{
+	(void)command;
+	(void)mini;
+}
+
+t_builtin get_builtin(char *cmd)
+{
+	static void	*builtins[7][2] = {{"exit", pass},
+			{"_echo", pass},
+			{"export", pass},
+			{"unset", pass},
+			{"cd", pass},
+			{"env", pass},
+			{"pwd", pass}};
+	int	i;
+
+	i = 0;
+	while (i < 7)
+	{
+		if (ft_strncmp((char *)builtins[i][0], cmd, ft_strlen(cmd)) == 0)
+			return ((t_builtin)builtins[i][1]);
+		i++;
+	}
+	return (NULL);		 
+}
+
+int exec_builtin(t_commands commands, t_mini *mini, int i)
+{
+	t_builtin	builtin;
+
+	builtin = get_builtin(commands.arr[i].args[0]);
+	if (!builtin)
+		return (0);
+	builtin(commands.arr + i, mini);
+	return (1);
+}
+
+void exec_program(t_commands commands, t_mini *mini, int i)
+{
+	commands.arr[i].pid = fork();
+	if (commands.arr[i].pid < 0)
+		clean_exit(mini, commands, 1);
+	else if (commands.arr[i].pid == 0)
+	{
+		exec_command(commands.arr + i, mini);
+		clean_exit(mini, commands, 1);
+	}
+	if (commands.arr[i].has_document)
+		close(commands.arr[i].fd_in);
+
+}
+
 void	exec_commands(t_commands commands, t_mini *mini)
 {
 	int	i;
-	int	pid;
-	int	fd[2];
+	int	*fd;
+	int	ret;
 
 	i = 0;
-	while (i < commands.size-1)
+	while (i < commands.size)
 	{
-		if (pipe(fd) == -1)
-			clean_exit(mini, commands, 1);
-		pid = fork();
-		if (pid < 0)
-			clean_exit(mini, commands, 1);
-		else if (pid == 0)
+		if (i < commands.size - 1)
 		{
-			exec_command(commands.arr + i, mini, fd);
-			clean_exit(mini, commands, 1);
+			fd = malloc(sizeof(int) * 2);
+			if (pipe(fd) == -1)
+				clean_exit(mini, commands, 1);
+			commands.arr[i].pipe_out = fd;
+			commands.arr[i + 1].pipe_in = fd;
 		}
-		if (commands.arr[i].has_document)
-			close(commands.arr[i].fd_in);
-		dup2(fd[0], STDIN_FILENO);
-		close(fd[1]);
+		if (!exec_builtin(commands, mini, i))
+			exec_program(commands, mini, i);
 		i++;
 	}
-	exec_command(commands.arr + i, mini, NULL);
-	clean_exit(mini, commands, 1);
+	i = 0;
+	while (i < commands.size)
+	{
+		if (commands.arr[i].pid)
+		{
+			waitpid(commands.arr[i].pid, &ret, 0);
+			mini->status_last = (ret & 0xff00) >> 8;
+		}
+		i++;
+	}
 }
 
 void	exec_shell_line(t_commands	commands, t_mini *mini)
 {
-	int	pid;
-	int	ret;
-
-	if (ft_strncmp(commands.arr[0].args[0], "exit", 5))
-	{
-		printf("\n");
-		clean_exit(mini, commands, 0);
-	}
-	pid = fork();
-	if (pid < 0)
-		clean_exit(mini, commands, 1);
-	if(pid == 0)
-	{
-		exec_commands(commands, mini);
-	}
-	else
-	{
-		g_proc_running = 1;
-		waitpid(pid, &ret, 0);
-		g_proc_running = 0;
-		mini->status_last = (ret & 0xff00) >> 8;
-	}
-
+	g_proc_running = 1;
+	exec_commands(commands, mini);
+	g_proc_running = 0;
 }
