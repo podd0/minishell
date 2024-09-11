@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:49:23 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/06 17:40:18 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/11 16:46:31 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,7 @@ void	free_tokens(t_token *token)
 {
 	if(!token)
 		return;
+	//printf("token = %p, val = %s (%p), next  = %p, prev = %p\n", token, token->value, token->value, token->next, token->prev);
 	free_tokens(token->next);
 	free(token->value);
 	free(token);

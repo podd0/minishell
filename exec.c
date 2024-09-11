@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:17:58 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/06 18:24:50 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/11 17:05:50 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,11 @@ void	exec_shell_line(t_commands	commands, t_mini *mini)
 	int	pid;
 	int	ret;
 
+	if (ft_strncmp(commands.arr[0].args[0], "exit", 5))
+	{
+		printf("\n");
+		clean_exit(mini, commands, 0);
+	}
 	pid = fork();
 	if (pid < 0)
 		clean_exit(mini, commands, 1);

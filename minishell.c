@@ -14,6 +14,19 @@ void	crtlc(int signal)
 	}
 }
 
+void	sigquit(int signal)
+{
+	(void)signal;
+	if (!g_proc_running)
+	{
+		rl_on_new_line();
+		rl_redisplay();
+		printf("  \b\b");
+	}
+	else
+		printf("\n");
+}
+
 int main(int argc, char **argv, char **env)
 {
 	char 		*input;
@@ -26,6 +39,7 @@ int main(int argc, char **argv, char **env)
 	
 	mini.path = get_path(env);
 	signal(SIGINT, crtlc);
+	signal(SIGQUIT, sigquit);
 	while ( 1 )
 	{
 		input = readline("$ ");
@@ -42,7 +56,8 @@ int main(int argc, char **argv, char **env)
 			printf("TYPE = %d, value = %s\n", tokens->type, tokens->value);
 			tokens = tokens->next;
 		}
-		commands = to_command_array(cp);
+		mini.tokens = cp;
+		commands = to_command_array(cp, &mini);
 		if(commands.size > 0)
 		{
 			exec_shell_line(commands, &mini);
