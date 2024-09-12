@@ -16,10 +16,10 @@ $(NAME): $(OBJECTS)
 	$(CC) -c $(CFLAGS) $? -o $@
 
 clean:
-	rm -f $(OBJECTS)
+	$(RM) -f $(OBJECTS)
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) -f $(NAME)
 
 re: fclean all
 

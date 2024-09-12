@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:17:58 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/12 20:17:12 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/12 20:27:03 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void exec_cmd(char **args, t_mini *mini)
 	}
 	free(args[0]);
 	args[0] = exec;
-	execve(exec, args, NULL);
+	execve(exec, args, mini->env->arr);
 }
 void	clean_exit(t_mini *mini, t_commands commands, int status)
 {
