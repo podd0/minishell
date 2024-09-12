@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:59:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/11 20:19:51 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/12 18:26:35 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,6 @@ typedef struct s_token
 	int				type;
 }	t_token;
 
-typedef struct s_mini
-{
-	char	**path;
-	int		status_last; 
-	t_vstr	*env;
-	t_token	*tokens;
-}	t_mini;
-
 typedef struct s_command
 {
 	char	**args;
@@ -68,6 +60,15 @@ typedef struct s_commands
 	t_command	*arr;
 	int			size;
 }	t_commands;
+
+typedef struct s_mini
+{
+	char		**path;
+	int			status_last; 
+	t_vstr		*env;
+	t_token		*tokens;
+	t_commands	commands;
+}	t_mini;
 
 typedef void (*t_builtin)(t_command *command, t_mini *mini);
 
@@ -87,5 +88,9 @@ void		exec_shell_line(t_commands	commands, t_mini *mini);
 void	clean_exit(t_mini *mini, t_commands commands, int status);
 
 void	set_env(t_mini *mini, char **env);
+
+void    echo(t_command *command, t_mini *mini);
+void    mini_exit(t_command *command, t_mini *mini);
+void	env(t_command *command, t_mini *mini);
 
 #endif

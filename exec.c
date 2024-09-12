@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:17:58 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/11 20:28:56 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/12 20:17:12 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,11 @@ void	clean_exit(t_mini *mini, t_commands commands, int status)
 {
 	free_commands(commands);
 	free_tokens(mini->tokens);
+	printf("clean history\n");
+	rl_clear_history();
 	vstr_map(mini->env, (void (*)(char *)) free);
 	vstr_free(mini->env);
+	ft_split_free(mini->path);
 	exit(status);
 }
 
@@ -60,23 +63,42 @@ static void pass(t_command *command, t_mini *mini)
 
 t_builtin get_builtin(char *cmd)
 {
-	static void	*builtins[7][2] = {{"exit", pass},
-			{"_echo", pass},
+	static void	*builtins[7][2] = {{"exit", mini_exit},
+			{"echo", echo},
 			{"export", pass},
 			{"unset", pass},
 			{"cd", pass},
-			{"env", pass},
+			{"env", env},
 			{"pwd", pass}};
 	int	i;
 
 	i = 0;
 	while (i < 7)
 	{
-		if (ft_strncmp((char *)builtins[i][0], cmd, ft_strlen(cmd)) == 0)
+		if (ft_strncmp((char *)builtins[i][0], cmd, ft_strlen(builtins[i][0])) == 0)
 			return ((t_builtin)builtins[i][1]);
 		i++;
 	}
 	return (NULL);		 
+}
+void	pipe_builtin(t_builtin builtin, t_command *command, t_mini *mini)
+{
+	if (command->fd_in == STDIN_FILENO && command->pipe_in)
+		command->fd_in = command->pipe_in[0];
+
+	if (command->fd_out == STDOUT_FILENO && command->pipe_out)
+		command->fd_out = command->pipe_out[1];
+
+	builtin(command, mini);
+	if (command->fd_in != STDIN_FILENO)
+		close(command->fd_in);
+	if (command->fd_out != STDOUT_FILENO)
+		close(command->fd_out);
+
+	if(command->pipe_in && command->fd_in != command->pipe_in[0])
+		close(command->pipe_in[0]);
+	if(command->pipe_out && command->fd_out != command->pipe_out[1])
+		close(command->pipe_out[1]);
 }
 
 int exec_builtin(t_commands commands, t_mini *mini, int i)
@@ -86,7 +108,7 @@ int exec_builtin(t_commands commands, t_mini *mini, int i)
 	builtin = get_builtin(commands.arr[i].args[0]);
 	if (!builtin)
 		return (0);
-	builtin(commands.arr + i, mini);
+	pipe_builtin(builtin, commands.arr + i, mini);
 	return (1);
 }
 
@@ -100,9 +122,14 @@ void exec_program(t_commands commands, t_mini *mini, int i)
 		exec_command(commands.arr + i, mini);
 		clean_exit(mini, commands, 1);
 	}
-	if (commands.arr[i].has_document)
+	if (commands.arr[i].fd_in != STDIN_FILENO)
 		close(commands.arr[i].fd_in);
-
+	if (commands.arr[i].fd_out != STDOUT_FILENO)
+		close(commands.arr[i].fd_out);
+	if (commands.arr[i].pipe_in)
+		close(commands.arr[i].pipe_in[0]);
+	if (commands.arr[i].pipe_out)
+		close(commands.arr[i].pipe_out[1]);
 }
 
 void	exec_commands(t_commands commands, t_mini *mini)

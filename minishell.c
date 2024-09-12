@@ -49,25 +49,19 @@ int main(int argc, char **argv, char **env)
 			break;
 		}
 		add_history(input);
-		t_token *tokens = tokenize(input, &mini);
-		t_token *cp = tokens;
-		while(tokens)
-		{
-			printf("TYPE = %d, value = %s\n", tokens->type, tokens->value);
-			tokens = tokens->next;
-		}
-		mini.tokens = cp;
-		commands = to_command_array(cp, &mini);
+		mini.tokens = tokenize(input, &mini);;
+		commands = to_command_array(mini.tokens, &mini);
+		mini.commands = commands;
 		if(commands.size > 0)
 		{
 			exec_shell_line(commands, &mini);
 			free_commands(commands);
 		}
-		free_tokens(cp);
+		free_tokens(mini.tokens);
 		free(input);
 	}
-	ft_split_free(mini.path);
+	rl_clear_history();
 	vstr_map(mini.env, (void (*)(char *)) free);
 	vstr_free(mini.env);
-	return 0;
+	ft_split_free(mini.path);
 }

@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:33:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/11 20:28:04 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/12 16:39:01 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,6 @@ void	free_commands(t_commands commands)
 	{
 		ft_split_free(commands.arr[i].args);
 		free(commands.arr[i].pipe_in);
-		free(commands.arr[i].pipe_out);
 		i++;
 	}
 	free(commands.arr);
