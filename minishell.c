@@ -48,12 +48,12 @@ int main(int argc, char **argv, char **env)
 			printf("\n");
 			break;
 		}
-		add_history(input);
 		mini.tokens = tokenize(input, &mini);;
 		commands = to_command_array(mini.tokens, &mini);
 		mini.commands = commands;
 		if(commands.size > 0)
 		{
+			add_history(input);
 			exec_shell_line(commands, &mini);
 			free_commands(commands);
 		}
