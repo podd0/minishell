@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:54:10 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/12 18:26:24 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/19 18:26:34 by epiacent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	echo(t_command *command, t_mini *mini)
 {
-	int out;
-	int i;
-	int nl;
-	int last;
+	int	out;
+	int	i;
+	int	nl;
+	int	last;
 
 	last = 0;
 	nl = 1;
@@ -27,7 +27,7 @@ void	echo(t_command *command, t_mini *mini)
 	{
 		if (ft_strncmp("-n", command->args[i], 3) == 0)
 			nl = 0;
-		else 
+		else
 		{
 			if (last)
 				ft_putstr_fd(" ", out);
@@ -43,7 +43,7 @@ void	echo(t_command *command, t_mini *mini)
 
 int	check_good_number(char *str)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (' ' == *str)
@@ -63,20 +63,18 @@ int	check_good_number(char *str)
 void	mini_exit(t_command *command, t_mini *mini)
 {
 	mini->status_last = 0;
-	
 	if (command->args[1])
 	{
 		if (!check_good_number(command->args[1]))
 		{
 			ft_putendl_fd("exit : numeric argument required", 2);
 			mini->status_last = 2;
-
 		}
 		else if (command->args[2])
 		{
 			ft_putendl_fd("exit : too many arguments", 2);
 			mini->status_last = 1;
-			return;
+			return ;
 		}
 		else
 		{
@@ -90,9 +88,9 @@ void	mini_exit(t_command *command, t_mini *mini)
 void	env(t_command *command, t_mini *mini)
 {
 	int	i;
-	
+
 	i = 0;
-	while (i < mini->env->size-1)
+	while (i < mini->env->size - 1)
 	{
 		ft_putendl_fd(mini->env->arr[i], command->fd_out);
 		i++;
