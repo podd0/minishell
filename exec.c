@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:17:58 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/19 18:35:50 by epiacent         ###   ########.fr       */
+/*   Updated: 2024/09/20 19:58:55 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ t_builtin	get_builtin(char *cmd)
 {
 	static void	*builtins[7][2] = {{"exit", mini_exit},
 	{"echo", echo},
-	{"export", pass},
-	{"unset", pass},
-	{"cd", pass},
+	{"export", export},
+	{"unset", unset},
+	{"cd", cd},
 	{"env", env},
 	{"pwd", pass}};
 	int			i;

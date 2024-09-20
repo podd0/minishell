@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:59:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/12 18:26:35 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/20 19:56:13 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,5 +92,11 @@ void	set_env(t_mini *mini, char **env);
 void    echo(t_command *command, t_mini *mini);
 void    mini_exit(t_command *command, t_mini *mini);
 void	env(t_command *command, t_mini *mini);
+void	export(t_command *command, t_mini *mini);
+void	unset(t_command *command, t_mini *mini);
+void	cd(t_command *command, t_mini *mini);
 
+int		is_variable_name(char c);
+
+void	merge_sort(t_vstr *vec);
 #endif
