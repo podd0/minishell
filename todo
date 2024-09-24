@@ -1,5 +1,0 @@
-handle errori di file non esistenti o con permessi sbagliati in redirect
-
-improve cd con i path giusti
-
-che fare se $PWD non punta alla dir corrente

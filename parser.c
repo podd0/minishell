@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:33:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/12 16:39:01 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/24 21:58:14 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,11 @@ int	check_okay(t_commands	commands)
 	i = 0;
 	while (i < commands.size)
 	{
+		if (commands.arr[i].fd_in == -1 || commands.arr[i].fd_out == -1)
+		{
+			perror(NULL);
+			return (0);
+		}
 		if (commands.arr[i].args[0] == NULL)
 		{
 			return (0);
@@ -169,6 +174,7 @@ t_commands	to_command_array(t_token *tokens, t_mini *mini)
 	if (!check_okay(commands))
 	{
 		free_commands(commands);
+		mini->status_last = 1;
 		return ((t_commands){NULL, -1});
 	}
 	return (commands);

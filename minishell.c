@@ -35,7 +35,7 @@ void	init_mini(t_mini *mini, char **env)
 	set_env(mini, env);
 	mini->path = get_path(env);
 	pwd = find_var("PWD", env);
-
+	mini->status_last = 0;
 
 	mini->pwd = vch_uninit(64);
 	while (1)
@@ -60,6 +60,7 @@ int main(int argc, char **argv, char **env)
 	char 		*input;
 	t_mini		mini;
 	t_commands	commands;
+	char		*prompt;
 
 	(void)argc;
 	(void)argv;
@@ -69,19 +70,21 @@ int main(int argc, char **argv, char **env)
 	signal(SIGQUIT, sigquit);
 	while ( 1 )
 	{
-		printf("%s ", mini.pwd->arr);
-		input = readline("$ ");
+		prompt = ft_strjoin(mini.pwd->arr, " $ ");
+		input = readline(prompt);
+		free(prompt);
 		if (input == NULL)
 		{
 			printf("\n");
 			break;
 		}
-		mini.tokens = tokenize(input, &mini);;
+		mini.tokens = tokenize(input, &mini);
 		commands = to_command_array(mini.tokens, &mini);
 		mini.commands = commands;
+		if (mini.tokens)
+			add_history(input);
 		if(commands.size > 0)
 		{
-			add_history(input);
 			exec_shell_line(commands, &mini);
 			free_commands(commands);
 		}

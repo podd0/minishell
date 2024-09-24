@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:49:23 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/24 16:30:48 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/24 22:15:16 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*skip_whitespace(char *line)
 {
-	while (*line == ' ')
+	while (*line == ' ' || *line == '\t')
 		line++;
 	return (line);
 }
@@ -110,7 +110,7 @@ char	*match_subtoken(char **line, t_mini *mini, t_token *token)
 	}
 	else
 	{
-		subtoken = match_until(line, "\"' <>|", 0);
+		subtoken = match_until(line, "\"'\t <>|", 0);
 		if (token->type != DOCUMENT)
 			subtoken = subst_env(subtoken, mini->env->arr, mini);
 	}
@@ -124,7 +124,7 @@ void	match_and_sub(t_token *token, char **line, t_mini *mini)
 	t_vch	*buf;
 	
 	buf = vch_uninit(0);
-	while (**line && !ft_strchr(" <>|", **line))
+	while (**line && !ft_strchr(" \t<>|", **line))
 	{
 		subtoken = match_subtoken(line, mini, token);
 		vch_cat(buf, subtoken);
