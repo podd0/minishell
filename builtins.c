@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:54:10 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/20 20:08:51 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/24 20:20:18 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,11 @@ void	unset(t_command *command, t_mini *mini)
 		var++;
 		if (i == -1)
 			continue;
+		if (ft_strncmp(var[-1], "PATH", 5) == 0)
+		{
+			ft_split_free(mini->path);
+			mini->path = calloc(sizeof(char **), 1);
+		}
 		free(mini->env->arr[i]);
 		while (i < mini->env->size - 1)
 		{
@@ -175,11 +180,47 @@ char	**vstr_back_ptr(t_vstr *vec)
 	return (&vec->arr[vec->size - 1]);
 }
 
+void	replace_or_add_variable(char **splitted, t_mini *mini, char *var)
+{
+	int	i;
+
+	i = find_var_index(splitted[0], mini->env);
+	if (i == -1)
+	{
+		*vstr_back_ptr(mini->env) = ft_strdup(var);
+		vstr_push_back(mini->env, NULL);
+	}
+	else
+	{
+		free(mini->env->arr[i]);
+		mini->env->arr[i] = ft_strdup(var);
+	}
+	if (ft_strncmp(splitted[0], "PATH", 5) == 0)
+	{
+		ft_split_free(mini->path);
+		mini->path = get_path(mini->env->arr);
+	}
+}
+
+char	*join_name_value(char *name, char *value)
+{
+	t_vch	*buf;
+	char	*res;
+	
+	buf = vch_from_string(name);
+	vch_pop_back(buf);
+	vch_push_back(buf, '=');
+	vch_cat(buf, value);
+	vch_push_back(buf, '\0');
+	res = buf->arr;
+	free(buf);
+	return (res);
+}
+
 void	export_many_params(t_command *command, t_mini *mini)
 {
 	char	**var;
 	char	**splitted;
-	int		i;
 
 	var = command->args + 1;
 	while (*var)
@@ -188,17 +229,7 @@ void	export_many_params(t_command *command, t_mini *mini)
 		var++;
 		if (!splitted)
 			continue;
-		i = find_var_index(splitted[0], mini->env);
-		if (i == -1)
-		{
-			*vstr_back_ptr(mini->env) = ft_strdup(var[-1]);
-			vstr_push_back(mini->env, NULL);
-		}
-		else
-		{
-			free(mini->env->arr[i]);
-			mini->env->arr[i] = ft_strdup(var[-1]);
-		}
+		replace_or_add_variable(splitted, mini, var[-1]);
 		ft_split_free(splitted);
 	}
 }
@@ -214,15 +245,86 @@ void	export(t_command *command, t_mini *mini)
 	env(command, mini);
 }
 
-int	cd_core(char *path)
+void	norm_path(t_vch *res, char *path)
 {
-	if (chdir(path) == -1)
+	int	ndot;
+
+	ndot = 0;
+	res->size = 0;
+	while(*path)
 	{
-		perror("cd");
+		if(*path == '/' && ndot <= 2)
+		{
+			while (res->size > 1 && ndot > 0)
+				if (vch_pop_back(res) == '/')
+					ndot--;
+		}
+		if (*path == '.')
+			ndot++;
+		else
+			ndot = 0;
+		vch_push_back(res, *path);
+		path++;
+	}
+
+	while (res->size > 1 && ndot > 0 && ndot <= 2)
+		if (vch_pop_back(res) == '/')
+			ndot--;
+	vch_push_back(res, '\0');
+}
+char	*path_join(t_vch *pwd, char *path)
+{
+	t_vch	*new_path;
+	char	*total_path;
+
+	if (path[0] != '/')
+	{
+		new_path = vch_copy(pwd);
+		if (new_path->size > 2)
+		{
+			vch_pop_back(new_path);
+			vch_push_back(new_path, '/');
+			vch_push_back(new_path, '\0');
+		}
+		total_path = ft_strjoin(new_path->arr, path);
+		norm_path(new_path, total_path);
+		free(total_path);
+		path = new_path->arr;
+		free(new_path);
+		return (path);
+	}
+	return (ft_strdup(path));
+}
+
+int	cd_core(t_mini *mini, char *path)
+{
+	int		len;
+	char	*actual_path;
+	char	*name_val[2];
+	char	*assignment;
+
+	actual_path = path_join(mini->pwd, path);
+	if (chdir(actual_path) < 0)
+	{
+		free(actual_path);
 		return (1);
 	}
+	vch_set_string(mini->pwd, actual_path);
+	len = mini->pwd->size;
+	if(len > 2 && mini->pwd->arr[len - 2] == '/')
+	{
+		mini->pwd->arr[len - 2] = '\0';
+		vch_pop_back(mini->pwd);
+	}
+	name_val[0] = "PWD";
+	name_val[1] = mini->pwd->arr;
+	assignment = join_name_value("PWD", mini->pwd->arr);
+	replace_or_add_variable(name_val, mini, assignment);
+	free(assignment);
+	free(actual_path);
 	return (0);
 }
+
 
 void	cd(t_command *command, t_mini *mini)
 {
@@ -230,12 +332,23 @@ void	cd(t_command *command, t_mini *mini)
 
 	if(!command->args[1])
 	{
-		home_path = subst_env(ft_strdup("$HOME"), mini->env->arr, mini);
-		mini->status_last = cd_core(home_path);
-		free(home_path);
+		home_path = find_var("HOME", mini->env->arr);
+		mini->status_last = cd_core(mini, home_path);
+		if (mini->status_last)
+			perror("cd");
 	}
 	else
 	{
-		mini->status_last = cd_core(command->args[1]);
+		mini->status_last = cd_core(mini, command->args[1]);
+		if (mini->status_last)
+		{
+			ft_putstr_fd("cd ", 2);
+			perror(command->args[1]);
+		}
 	}
+}
+
+void	print_pwd(t_command *command, t_mini *mini)
+{
+	ft_putendl_fd(mini->pwd->arr, command->fd_out);
 }

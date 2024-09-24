@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 19:15:13 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/06 14:46:59 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/24 15:41:27 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,9 @@ char	*find_exec(char *cmd, char **path)
 
 char	**get_path(char **environ)
 {
-	while (ft_strncmp(*environ, "PATH=", 5))
+	while (*environ && ft_strncmp(*environ, "PATH=", 5))
 		environ++;
+	if (!*environ)
+		return ft_calloc(sizeof(char **), 1);
 	return (ft_split((*environ) + 5, ':'));
 }

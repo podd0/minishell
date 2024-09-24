@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:59:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/20 19:56:13 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/24 17:42:59 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ typedef struct s_mini
 	t_vstr		*env;
 	t_token		*tokens;
 	t_commands	commands;
+	t_vch		*pwd;
 }	t_mini;
 
 typedef void (*t_builtin)(t_command *command, t_mini *mini);
@@ -85,18 +86,24 @@ void	free_tokens(t_token *token);
 t_commands   to_command_array(t_token *tokens, t_mini *mini);
 void		free_commands(t_commands commands);
 void		exec_shell_line(t_commands	commands, t_mini *mini);
-void	clean_exit(t_mini *mini, t_commands commands, int status);
+void		clean_exit(t_mini *mini, t_commands commands, int status);
+void		vch_cat(t_vch *res, char *str);
 
 void	set_env(t_mini *mini, char **env);
+char	*find_var(char *name, char **env);
 
-void    echo(t_command *command, t_mini *mini);
-void    mini_exit(t_command *command, t_mini *mini);
+void	echo(t_command *command, t_mini *mini);
+void	mini_exit(t_command *command, t_mini *mini);
 void	env(t_command *command, t_mini *mini);
 void	export(t_command *command, t_mini *mini);
 void	unset(t_command *command, t_mini *mini);
 void	cd(t_command *command, t_mini *mini);
+void	print_pwd(t_command *command, t_mini *mini);
 
 int		is_variable_name(char c);
 
 void	merge_sort(t_vstr *vec);
+t_vch	*vch_from_string(char *s);
+void	vch_set_string(t_vch *v, char *s);
+
 #endif

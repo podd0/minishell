@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:31:38 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/19 19:30:04 by epiacent         ###   ########.fr       */
+/*   Updated: 2024/09/24 20:06:00 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ t_vch	*get_var_name(char *s)
 	return (name);
 }
 
+// no null terminator
 void	vch_cat(t_vch *res, char *str)
 {
 	while (*str)

@@ -1,7 +1,5 @@
-ogni token tranne PIPE ha sostituzioni
+handle errori di file non esistenti o con permessi sbagliati in redirect
 
-handle ctrl+c, ctrl+\
+improve cd con i path giusti
 
-priorità di redirect su pipes
-
-
+che fare se $PWD non punta alla dir corrente

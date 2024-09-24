@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:49:23 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/19 19:24:52 by epiacent         ###   ########.fr       */
+/*   Updated: 2024/09/24 16:30:48 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,27 +92,47 @@ t_token	*token_init(char **line)
 	token->prev = NULL;
 	return (token);
 }
-
-void	match_and_sub(t_token *token, char **line, t_mini *mini)
+char	*match_subtoken(char **line, t_mini *mini, t_token *token)
 {
+	char	*subtoken;
+	
 	if (**line == '\'')
 	{
 		(*line)++;
-		token->value = match_until(line, "'", 1);
+		subtoken = match_until(line, "'", 1);
 	}
 	else if (**line == '"')
 	{
 		(*line)++;
-		token->value = match_until(line, "\"", 1);
+		subtoken = match_until(line, "\"", 1);
 		if (token->type != DOCUMENT)
-			token->value = subst_env(token->value, mini->env->arr, mini);
+			subtoken = subst_env(subtoken, mini->env->arr, mini);
 	}
 	else
 	{
-		token->value = match_until(line, "\"' <>|", 0);
+		subtoken = match_until(line, "\"' <>|", 0);
 		if (token->type != DOCUMENT)
-			token->value = subst_env(token->value, mini->env->arr, mini);
+			subtoken = subst_env(subtoken, mini->env->arr, mini);
 	}
+	return (subtoken);
+}
+
+
+void	match_and_sub(t_token *token, char **line, t_mini *mini)
+{
+	char	*subtoken;
+	t_vch	*buf;
+	
+	buf = vch_uninit(0);
+	while (**line && !ft_strchr(" <>|", **line))
+	{
+		subtoken = match_subtoken(line, mini, token);
+		vch_cat(buf, subtoken);
+		free(subtoken);
+	}
+	vch_push_back(buf, '\0');
+	token->value = buf->arr;
+	free(buf);
 }
 
 t_token	*match_token(char **line, t_mini *mini)

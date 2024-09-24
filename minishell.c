@@ -1,4 +1,5 @@
 #include <minishell.h>
+#include <errno.h>
 
 int	g_proc_running = 0;
 
@@ -27,6 +28,33 @@ void	sigquit(int signal)
 		printf("\n");
 }
 
+void	init_mini(t_mini *mini, char **env)
+{
+	char	*pwd;
+
+	set_env(mini, env);
+	mini->path = get_path(env);
+	pwd = find_var("PWD", env);
+
+
+	mini->pwd = vch_uninit(64);
+	while (1)
+	{
+		pwd = getcwd(mini->pwd->arr, (size_t)mini->pwd->size);
+		if (pwd == NULL && errno == ERANGE)
+			vch_resize(mini->pwd, mini->pwd->size * 2);
+		else if (pwd == NULL)
+		{
+			perror("pwd");
+			exit(1);
+		}
+		else 
+		{
+			break;
+		}
+	}
+}
+
 int main(int argc, char **argv, char **env)
 {
 	char 		*input;
@@ -35,13 +63,13 @@ int main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
-	set_env(&mini, env);
 	
-	mini.path = get_path(env);
+	init_mini(&mini, env);
 	signal(SIGINT, crtlc);
 	signal(SIGQUIT, sigquit);
 	while ( 1 )
 	{
+		printf("%s ", mini.pwd->arr);
 		input = readline("$ ");
 		if (input == NULL)
 		{
@@ -63,5 +91,6 @@ int main(int argc, char **argv, char **env)
 	rl_clear_history();
 	vstr_map(mini.env, (void (*)(char *)) free);
 	vstr_free(mini.env);
+	vch_free(mini.pwd);
 	ft_split_free(mini.path);
 }

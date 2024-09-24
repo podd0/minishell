@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:17:58 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/20 19:58:55 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/09/24 17:52:35 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,6 @@ void	exec_command(t_command *command, t_mini *mini)
 	exec_cmd(command->args, mini);
 }
 
-static void	pass(t_command *command, t_mini *mini)
-{
-	(void)command;
-	(void)mini;
-}
-
 t_builtin	get_builtin(char *cmd)
 {
 	static void	*builtins[7][2] = {{"exit", mini_exit},
@@ -69,7 +63,7 @@ t_builtin	get_builtin(char *cmd)
 	{"unset", unset},
 	{"cd", cd},
 	{"env", env},
-	{"pwd", pass}};
+	{"pwd", print_pwd}};
 	int			i;
 
 	i = 0;
