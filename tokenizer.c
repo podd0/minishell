@@ -3,83 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:49:23 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/02 14:55:50 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/02 15:09:53 by epiacent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-char	*skip_whitespace(char *line)
-{
-	while (*line == ' ' || *line == '\t')
-		line++;
-	return (line);
-}
-
-char	*match_until(char **line, char *charset, int skip)
-{
-	t_vch	*buf;
-	char	*res;
-
-	buf = vch_uninit(0);
-	while (**line && !ft_strchr(charset, **line))
-	{
-		vch_push_back(buf, **line);
-		(*line)++;
-	}
-	if (**line)
-		(*line) += skip;
-	vch_push_back(buf, '\0');
-	res = buf->arr;
-	free(buf);
-	return (res);
-}
-
-int	check_out(char **line)
-{
-	char	*s;
-
-	s = *line;
-	if (s[0] == '>')
-	{
-		if (s[1] == '>')
-		{
-			*line = skip_whitespace(*line + 2);
-			return (APPEND);
-		}
-		*line = skip_whitespace(*line + 1);
-		return (OUT);
-	}
-	return (ARG);
-}
-
-int	get_type(char **line)
-{
-	char	*s;
-
-	s = *line;
-	if (ft_strchr("'\"", **line))
-		return (ARG);
-	if (s[0] == '<')
-	{
-		if (s[1] == '<')
-		{
-			*line = skip_whitespace(*line + 2);
-			return (DOCUMENT);
-		}
-		*line = skip_whitespace(*line + 1);
-		return (IN);
-	}
-	if (s[0] == '|')
-	{
-		*line = skip_whitespace(*line + 1);
-		return (PIPE);
-	}
-	return (check_out(line));
-}
 
 t_token	*token_init(char **line)
 {
@@ -92,6 +23,7 @@ t_token	*token_init(char **line)
 	token->prev = NULL;
 	return (token);
 }
+
 char	*match_subtoken(char **line, t_mini *mini, t_token *token)
 {
 	char	*subtoken;
@@ -173,13 +105,4 @@ t_token	*tokenize(char *line, t_mini *mini)
 		line = skip_whitespace(line);
 	}
 	return (head);
-}
-
-void	free_tokens(t_token *token)
-{
-	if (!token)
-		return ;
-	free_tokens(token->next);
-	free(token->value);
-	free(token);
 }

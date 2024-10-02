@@ -1,0 +1,4 @@
+void	free_tokens(t_token *token);
+int	get_type(char **line);
+char	*match_until(char **line, char *charset, int skip);
+char	*skip_whitespace(char *line);

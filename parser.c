@@ -3,81 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:33:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/24 21:58:14 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/02 15:23:59 by epiacent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-int	num_commands(t_token *tokens)
-{
-	int	count;
-
-	count = 1;
-	while (tokens)
-	{
-		if (tokens->type == PIPE && tokens->next)
-			count++;
-		tokens = tokens->next;
-	}
-	return (count);
-}
-
-t_command	*init_commands(int count)
-{
-	t_command	*commands;
-	int			i;
-
-	i = 0;
-	commands = malloc(sizeof(t_command) * count);
-	while (i < count)
-	{
-		commands[i].fd_in = STDIN_FILENO;
-		commands[i].fd_out = STDOUT_FILENO;
-		commands[i].has_document = 0;
-		commands[i].args = NULL;
-		commands[i].pipe_in = NULL;
-		commands[i].pipe_out = NULL;
-		commands[i].pid = 0;
-		i++;
-	}
-	return (commands);
-}
-
-int	count_args(t_token *token)
-{
-	int	count;
-
-	count = 0;
-	while (token && token->type != PIPE)
-	{
-		if (token->type == ARG)
-			count++;
-		token = token->next;
-	}
-	return (count);
-}
-
-t_token	*next_command(t_token *token)
-{
-	while (token && token->type != PIPE)
-		token = token->next;
-	if (token)
-		return (token->next);
-	return (NULL);
-}
-
-t_token	*next_arg(t_token *token)
-{
-	if (token)
-		token = token->next;
-	while (token && token->type != ARG)
-		token = token->next;
-	return (token);
-}
 
 int	here_document(t_command *command, char *separator)
 {
@@ -104,6 +37,25 @@ int	here_document(t_command *command, char *separator)
 	return (0);
 }
 
+void	check_type(t_command *command, t_token *tokens)
+{
+	if (tokens->type == ARG)
+		command->args[i++] = ft_strdup(tokens->value);
+	else if (tokens->type == DOCUMENT)
+	{
+		if (here_document(command, tokens->value))
+			return (1);
+	}
+	else if (tokens->type == IN && !command->has_document)
+		command->fd_in = open(tokens->value, O_RDONLY);
+	else if (tokens->type == OUT)
+		command->fd_out = open(tokens->value, O_WRONLY | O_CREAT | O_TRUNC,
+				0666);
+	else if (tokens->type == APPEND)
+		command->fd_out = open(tokens->value, O_WRONLY | O_CREAT | O_APPEND,
+				0666);
+}
+
 int	make_single_command(t_command *command, t_token *tokens)
 {
 	int	argc;
@@ -114,21 +66,7 @@ int	make_single_command(t_command *command, t_token *tokens)
 	i = 0;
 	while (tokens && tokens->type != PIPE)
 	{
-		if (tokens->type == ARG)
-			command->args[i++] = ft_strdup(tokens->value);
-		else if (tokens->type == DOCUMENT)
-		{
-			if (here_document(command, tokens->value))
-				return (1);
-		}
-		else if (tokens->type == IN && !command->has_document)
-			command->fd_in = open(tokens->value, O_RDONLY);
-		else if (tokens->type == OUT)
-			command->fd_out = open(tokens->value, O_WRONLY | O_CREAT | O_TRUNC,
-					0666);
-		else if (tokens->type == APPEND)
-			command->fd_out = open(tokens->value, O_WRONLY | O_CREAT | O_APPEND,
-					0666);
+		check_type(command, tokens);
 		tokens = tokens->next;
 	}
 	command->args[argc] = NULL;
@@ -181,18 +119,4 @@ t_commands	to_command_array(t_token *tokens, t_mini *mini)
 		return ((t_commands){NULL, -1});
 	}
 	return (commands);
-}
-
-void	free_commands(t_commands commands)
-{
-	int	i;
-
-	i = 0;
-	while (i < commands.size)
-	{
-		ft_split_free(commands.arr[i].args);
-		free(commands.arr[i].pipe_in);
-		i++;
-	}
-	free(commands.arr);
 }
