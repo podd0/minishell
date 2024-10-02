@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:17:58 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/02 15:19:13 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/02 16:55:05 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	clean_exit(t_mini *mini, t_commands commands, int status)
 	vstr_map(mini->env, (void (*)(char *))free);
 	vstr_free(mini->env);
 	ft_split_free(mini->path);
+	vch_free(mini->pwd);
 	exit(status);
 }
 
