@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:33:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/02 15:23:59 by epiacent         ###   ########.fr       */
+/*   Updated: 2024/10/02 15:35:52 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ int	here_document(t_command *command, char *separator)
 	return (0);
 }
 
-void	check_type(t_command *command, t_token *tokens)
+int	check_type(t_command *command, t_token *tokens, int *i)
 {
 	if (tokens->type == ARG)
-		command->args[i++] = ft_strdup(tokens->value);
+		command->args[(*i)++] = ft_strdup(tokens->value);
 	else if (tokens->type == DOCUMENT)
 	{
 		if (here_document(command, tokens->value))
@@ -54,6 +54,7 @@ void	check_type(t_command *command, t_token *tokens)
 	else if (tokens->type == APPEND)
 		command->fd_out = open(tokens->value, O_WRONLY | O_CREAT | O_APPEND,
 				0666);
+	return (0);
 }
 
 int	make_single_command(t_command *command, t_token *tokens)
@@ -61,12 +62,13 @@ int	make_single_command(t_command *command, t_token *tokens)
 	int	argc;
 	int	i;
 
+	i = 0;
 	argc = count_args(tokens);
 	command->args = malloc((argc + 1) * sizeof(char *));
-	i = 0;
 	while (tokens && tokens->type != PIPE)
 	{
-		check_type(command, tokens);
+		if (check_type(command, tokens, &i))
+			return (1);
 		tokens = tokens->next;
 	}
 	command->args[argc] = NULL;

@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 17:14:22 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/24 18:45:39 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/02 15:42:07 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,33 @@ void	vch_set_string(t_vch *v, char *s)
 		i++;
 	}
 	v->size = len;
+}
+
+void	free_commands(t_commands commands)
+{
+	int	i;
+
+	i = 0;
+	while (i < commands.size)
+	{
+		ft_split_free(commands.arr[i].args);
+		free(commands.arr[i].pipe_in);
+		i++;
+	}
+	free(commands.arr);
+}
+
+// no null terminator
+void	vch_cat(t_vch *res, char *str)
+{
+	while (*str)
+	{
+		vch_push_back(res, *str);
+		str++;
+	}
+}
+
+int	is_variable_name(char c)
+{
+	return (ft_isalnum(c) || c == '_');
 }

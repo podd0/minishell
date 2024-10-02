@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:31:38 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/24 20:06:00 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/02 15:40:07 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,6 @@ char	*find_var(char *name, char **env)
 	return ("");
 }
 
-int	is_variable_name(char c)
-{
-	return (ft_isalnum(c) || c == '_');
-}
-
 t_vch	*get_var_name(char *s)
 {
 	t_vch	*name;
@@ -48,16 +43,6 @@ t_vch	*get_var_name(char *s)
 	}
 	vch_push_back(name, '\0');
 	return (name);
-}
-
-// no null terminator
-void	vch_cat(t_vch *res, char *str)
-{
-	while (*str)
-	{
-		vch_push_back(res, *str);
-		str++;
-	}
 }
 
 int	handle_dollar(t_mini *mini, char **env, char *line, t_vch *res)
