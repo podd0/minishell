@@ -18,13 +18,12 @@ int	varname_compare(char *a, char *b)
 		return (1);
 	if (!a)
 		return (0);
-	
-	while(*a != '=' && *b != '=' && *a == *b)
+	while (*a != '=' && *b != '=' && *a == *b)
 	{
 		a++;
 		b++;
 	}
-	if(*a == '=' || *b == '=')
+	if (*a == '=' || *b == '=')
 	{
 		return (*a == '=');
 	}

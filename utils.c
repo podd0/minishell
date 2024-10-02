@@ -14,8 +14,8 @@
 
 t_vch	*vch_from_string(char *s)
 {
-	int	len;
-	int	i;
+	int		len;
+	int		i;
 	t_vch	*res;
 
 	i = 0;
@@ -28,7 +28,6 @@ t_vch	*vch_from_string(char *s)
 	}
 	return (res);
 }
-
 
 void	vch_set_string(t_vch *v, char *s)
 {

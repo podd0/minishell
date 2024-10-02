@@ -32,7 +32,7 @@ void	clean_exit(t_mini *mini, t_commands commands, int status)
 	free_commands(commands);
 	free_tokens(mini->tokens);
 	rl_clear_history();
-	vstr_map(mini->env, (void (*)(char *)) free);
+	vstr_map(mini->env, (void (*)(char *))free);
 	vstr_free(mini->env);
 	ft_split_free(mini->path);
 	exit(status);
@@ -57,20 +57,16 @@ void	exec_command(t_command *command, t_mini *mini)
 
 t_builtin	get_builtin(char *cmd)
 {
-	static void	*builtins[7][2] = {{"exit", mini_exit},
-	{"echo", echo},
-	{"export", export},
-	{"unset", unset},
-	{"cd", cd},
-	{"env", env},
-	{"pwd", print_pwd}};
+	static void	*builtins[7][2] = {{"exit", mini_exit}, {"echo", echo},
+			{"export", export}, {"unset", unset}, {"cd", cd}, {"env", env},
+			{"pwd", print_pwd}};
 	int			i;
 
 	i = 0;
 	while (i < 7)
 	{
 		if (ft_strncmp((char *)builtins[i][0], cmd,
-			ft_strlen(builtins[i][0])) == 0)
+				ft_strlen(builtins[i][0])) == 0)
 			return ((t_builtin)builtins[i][1]);
 		i++;
 	}
@@ -158,7 +154,7 @@ void	exec_commands(t_commands commands, t_mini *mini)
 	}
 }
 
-void	exec_shell_line(t_commands	commands, t_mini *mini)
+void	exec_shell_line(t_commands commands, t_mini *mini)
 {
 	g_proc_running = 1;
 	exec_commands(commands, mini);

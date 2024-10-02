@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:54:10 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/24 20:20:18 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/02 14:54:13 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	env(t_command *command, t_mini *mini)
 	}
 }
 
-int		find_var_index(char *name, t_vstr *env)
+int	find_var_index(char *name, t_vstr *env)
 {
 	int	i;
 	int	len;
@@ -124,7 +124,7 @@ void	unset(t_command *command, t_mini *mini)
 		i = find_var_index(*var, mini->env);
 		var++;
 		if (i == -1)
-			continue;
+			continue ;
 		if (ft_strncmp(var[-1], "PATH", 5) == 0)
 		{
 			ft_split_free(mini->path);
@@ -144,12 +144,13 @@ void	unset(t_command *command, t_mini *mini)
 char	*add_equals(char *var)
 {
 	char	*it;
+
 	it = var;
-	while(*it && *it != '=')
+	while (*it && *it != '=')
 		it++;
 	if (*it == '=')
-		return ft_strdup(var);
-	return ft_strjoin(var, "=");
+		return (ft_strdup(var));
+	return (ft_strjoin(var, "="));
 }
 
 char	**split_var(char *key_val)
@@ -168,9 +169,9 @@ char	**split_var(char *key_val)
 	{
 		return (NULL);
 	}
-	res = malloc(3*sizeof(char *));
+	res = malloc(3 * sizeof(char *));
 	res[0] = ft_substr(key_val, 0, len);
-	res[1] = ft_substr(key_val, len+1, ft_strlen(key_val + len + 1));
+	res[1] = ft_substr(key_val, len + 1, ft_strlen(key_val + len + 1));
 	res[2] = NULL;
 	return (res);
 }
@@ -206,7 +207,7 @@ char	*join_name_value(char *name, char *value)
 {
 	t_vch	*buf;
 	char	*res;
-	
+
 	buf = vch_from_string(name);
 	vch_pop_back(buf);
 	vch_push_back(buf, '=');
@@ -228,7 +229,7 @@ void	export_many_params(t_command *command, t_mini *mini)
 		splitted = split_var(*var);
 		var++;
 		if (!splitted)
-			continue;
+			continue ;
 		replace_or_add_variable(splitted, mini, var[-1]);
 		ft_split_free(splitted);
 	}
@@ -251,9 +252,9 @@ void	norm_path(t_vch *res, char *path)
 
 	ndot = 0;
 	res->size = 0;
-	while(*path)
+	while (*path)
 	{
-		if(*path == '/' && ndot <= 2)
+		if (*path == '/' && ndot <= 2)
 		{
 			while (res->size > 1 && ndot > 0)
 				if (vch_pop_back(res) == '/')
@@ -266,12 +267,12 @@ void	norm_path(t_vch *res, char *path)
 		vch_push_back(res, *path);
 		path++;
 	}
-
 	while (res->size > 1 && ndot > 0 && ndot <= 2)
 		if (vch_pop_back(res) == '/')
 			ndot--;
 	vch_push_back(res, '\0');
 }
+
 char	*path_join(t_vch *pwd, char *path)
 {
 	t_vch	*new_path;
@@ -311,7 +312,7 @@ int	cd_core(t_mini *mini, char *path)
 	}
 	vch_set_string(mini->pwd, actual_path);
 	len = mini->pwd->size;
-	if(len > 2 && mini->pwd->arr[len - 2] == '/')
+	if (len > 2 && mini->pwd->arr[len - 2] == '/')
 	{
 		mini->pwd->arr[len - 2] = '\0';
 		vch_pop_back(mini->pwd);
@@ -325,12 +326,11 @@ int	cd_core(t_mini *mini, char *path)
 	return (0);
 }
 
-
 void	cd(t_command *command, t_mini *mini)
 {
 	char	*home_path;
 
-	if(!command->args[1])
+	if (!command->args[1])
 	{
 		home_path = find_var("HOME", mini->env->arr);
 		mini->status_last = cd_core(mini, home_path);

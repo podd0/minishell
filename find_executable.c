@@ -10,11 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
-#include <unistd.h>
-#include <libft.h>
-#include <stdlib.h>
 #include <fcntl.h>
+#include <libft.h>
+#include <minishell.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 static char	*path_join(char *p1, char *p2)
 {
@@ -63,6 +63,6 @@ char	**get_path(char **environ)
 	while (*environ && ft_strncmp(*environ, "PATH=", 5))
 		environ++;
 	if (!*environ)
-		return ft_calloc(sizeof(char **), 1);
+		return (ft_calloc(sizeof(char **), 1));
 	return (ft_split((*environ) + 5, ':'));
 }

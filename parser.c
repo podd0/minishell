@@ -17,7 +17,7 @@ int	num_commands(t_token *tokens)
 	int	count;
 
 	count = 1;
-	while(tokens)
+	while (tokens)
 	{
 		if (tokens->type == PIPE && tokens->next)
 			count++;
@@ -44,7 +44,7 @@ t_command	*init_commands(int count)
 		commands[i].pid = 0;
 		i++;
 	}
-	return commands;
+	return (commands);
 }
 
 int	count_args(t_token *token)
@@ -52,7 +52,7 @@ int	count_args(t_token *token)
 	int	count;
 
 	count = 0;
-	while (token && token -> type != PIPE)
+	while (token && token->type != PIPE)
 	{
 		if (token->type == ARG)
 			count++;
@@ -63,38 +63,39 @@ int	count_args(t_token *token)
 
 t_token	*next_command(t_token *token)
 {
-	while (token && token -> type != PIPE)
-		token = token -> next;
+	while (token && token->type != PIPE)
+		token = token->next;
 	if (token)
-		return token->next;
-	return NULL;
+		return (token->next);
+	return (NULL);
 }
 
 t_token	*next_arg(t_token *token)
 {
 	if (token)
 		token = token->next;
-	while (token && token -> type != ARG)
-		token = token -> next;
+	while (token && token->type != ARG)
+		token = token->next;
 	return (token);
 }
 
 int	here_document(t_command *command, char *separator)
 {
 	int		fd[2];
-	char 	*line;
+	char	*line;
 
 	if (pipe(fd) == -1)
 		return (1);
 	command->has_document = 1;
 	command->fd_in = fd[0];
-	while ( 1 )
+	while (1)
 	{
 		line = readline("> ");
 		if (!line)
-			ft_putendl_fd("warning : here document closed by end of file", STDERR_FILENO);
+			ft_putendl_fd("warning : here document closed by end of file",
+				STDERR_FILENO);
 		if (!line || ft_strncmp(line, separator, ft_strlen(separator)) == 0)
-			break;
+			break ;
 		ft_putendl_fd(line, fd[1]);
 		free(line);
 	}
@@ -109,7 +110,7 @@ int	make_single_command(t_command *command, t_token *tokens)
 	int	i;
 
 	argc = count_args(tokens);
-	command->args = malloc((argc+1) * sizeof(char *));
+	command->args = malloc((argc + 1) * sizeof(char *));
 	i = 0;
 	while (tokens && tokens->type != PIPE)
 	{
@@ -117,22 +118,24 @@ int	make_single_command(t_command *command, t_token *tokens)
 			command->args[i++] = ft_strdup(tokens->value);
 		else if (tokens->type == DOCUMENT)
 		{
-			if(here_document(command, tokens->value))
+			if (here_document(command, tokens->value))
 				return (1);
 		}
 		else if (tokens->type == IN && !command->has_document)
 			command->fd_in = open(tokens->value, O_RDONLY);
 		else if (tokens->type == OUT)
-			command->fd_out = open(tokens->value, O_WRONLY|O_CREAT|O_TRUNC, 0666);
-		else  if (tokens->type == APPEND)
-			command->fd_out = open(tokens->value, O_WRONLY|O_CREAT|O_APPEND, 0666);
+			command->fd_out = open(tokens->value, O_WRONLY | O_CREAT | O_TRUNC,
+					0666);
+		else if (tokens->type == APPEND)
+			command->fd_out = open(tokens->value, O_WRONLY | O_CREAT | O_APPEND,
+					0666);
 		tokens = tokens->next;
 	}
 	command->args[argc] = NULL;
 	return (0);
 }
 
-int	check_okay(t_commands	commands)
+int	check_okay(t_commands commands)
 {
 	int	i;
 
@@ -164,7 +167,7 @@ t_commands	to_command_array(t_token *tokens, t_mini *mini)
 	command_arr = init_commands(count);
 	i = 0;
 	commands = (t_commands){command_arr, count};
-	while(i < count)
+	while (i < count)
 	{
 		if (make_single_command(command_arr + i, tokens))
 			clean_exit(mini, commands, 1);

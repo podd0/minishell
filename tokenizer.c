@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:49:23 by apuddu            #+#    #+#             */
-/*   Updated: 2024/09/24 22:15:16 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/02 14:55:50 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ t_token	*token_init(char **line)
 char	*match_subtoken(char **line, t_mini *mini, t_token *token)
 {
 	char	*subtoken;
-	
+
 	if (**line == '\'')
 	{
 		(*line)++;
@@ -117,12 +117,11 @@ char	*match_subtoken(char **line, t_mini *mini, t_token *token)
 	return (subtoken);
 }
 
-
 void	match_and_sub(t_token *token, char **line, t_mini *mini)
 {
 	char	*subtoken;
 	t_vch	*buf;
-	
+
 	buf = vch_uninit(0);
 	while (**line && !ft_strchr(" \t<>|", **line))
 	{
@@ -180,7 +179,6 @@ void	free_tokens(t_token *token)
 {
 	if (!token)
 		return ;
-	//printf("token = %p, val = %s (%p), next  = %p, prev = %p\n", token, token->value, token->value, token->next, token->prev);
 	free_tokens(token->next);
 	free(token->value);
 	free(token);
