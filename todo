@@ -1,5 +1,3 @@
-exit status di ctrlc = 130
 fix strcmp di here doc
 stampare qualche errore ogni tanto
-cat | cat | cat | ls (boh)
 

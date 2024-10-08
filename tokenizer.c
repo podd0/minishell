@@ -6,7 +6,7 @@
 /*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:49:23 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/02 15:09:53 by epiacent         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:51:28 by epiacent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ t_token	*match_token(char **line, t_mini *mini)
 	token = token_init(line);
 	if (token->type == PIPE)
 		return (token);
-	if (**line == '\0')
-		return (NULL);
 	match_and_sub(token, line, mini);
 	return (token);
 }
@@ -91,9 +89,9 @@ t_token	*tokenize(char *line, t_mini *mini)
 	while (*line)
 	{
 		curr = match_token(&line, mini);
-		curr->next = NULL;
 		if (!curr)
 			break ;
+		curr->next = NULL;
 		if (!head)
 			head = curr;
 		curr->prev = tail;

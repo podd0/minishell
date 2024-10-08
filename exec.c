@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:17:58 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/02 16:55:05 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/08 16:24:37 by epiacent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	exec_command(t_command *command, t_mini *mini)
 	if (command->pipe_in)
 	{
 		dup2(command->pipe_in[0], STDIN_FILENO);
-		close(command->pipe_in[1]);
 	}
 	if (command->pipe_out)
 	{

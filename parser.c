@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:33:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/02 15:35:52 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/08 16:57:05 by epiacent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	here_document(t_command *command, char *separator)
 		if (!line)
 			ft_putendl_fd("warning : here document closed by end of file",
 				STDERR_FILENO);
-		if (!line || ft_strncmp(line, separator, ft_strlen(separator)) == 0)
+		if (!line || ft_strncmp(line, separator, ft_strlen(separator) + 1) == 0)
 			break ;
 		ft_putendl_fd(line, fd[1]);
 		free(line);
@@ -89,6 +89,7 @@ int	check_okay(t_commands commands)
 		}
 		if (commands.arr[i].args[0] == NULL)
 		{
+			ft_putendl_fd("Error: malformed command", 2);
 			return (0);
 		}
 		i++;

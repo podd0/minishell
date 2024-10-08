@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:59:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/02 16:30:00 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/08 16:26:52 by epiacent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ typedef struct s_mini
 	t_commands		commands;
 	t_vch			*pwd;
 }					t_mini;
+
+extern int			g_signal;
 
 typedef void		(*t_builtin)(t_command *command, t_mini *mini);
 
