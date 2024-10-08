@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:33:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/08 16:57:05 by epiacent         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:38:37 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ t_commands	to_command_array(t_token *tokens, t_mini *mini)
 		tokens = next_command(tokens);
 		i++;
 	}
-	if (!check_okay(commands))
+	if (!check_okay(commands) || count < 0)
 	{
 		free_commands(commands);
 		mini->status_last = 1;

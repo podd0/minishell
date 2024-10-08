@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:12:49 by epiacent          #+#    #+#             */
-/*   Updated: 2024/10/02 15:16:54 by epiacent         ###   ########.fr       */
+/*   Updated: 2024/10/08 17:41:09 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,16 @@ int	num_commands(t_token *tokens)
 	count = 1;
 	while (tokens)
 	{
-		if (tokens->type == PIPE && tokens->next)
+		if (tokens->type == PIPE)
+		{
+			if (tokens->next == NULL)
+			{
+				ft_putendl_fd("Error: commands can't end with a pipe", 2);
+
+				return (-1);
+			}
 			count++;
+		}
 		tokens = tokens->next;
 	}
 	return (count);
@@ -31,6 +39,8 @@ t_command	*init_commands(int count)
 	t_command	*commands;
 	int			i;
 
+	if (count < 0)
+		return (NULL);
 	i = 0;
 	commands = malloc(sizeof(t_command) * count);
 	while (i < count)
@@ -66,7 +76,9 @@ t_token	*next_command(t_token *token)
 	while (token && token->type != PIPE)
 		token = token->next;
 	if (token)
+	{
 		return (token->next);
+	}
 	return (NULL);
 }
 
