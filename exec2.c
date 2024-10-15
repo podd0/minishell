@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:17:02 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/02 16:30:15 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/15 17:40:44 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,15 @@ int	exec_builtin(t_commands commands, t_mini *mini, int i)
 
 void	exec_program(t_commands commands, t_mini *mini, int i)
 {
+	int	status;
+
 	commands.arr[i].pid = fork();
 	if (commands.arr[i].pid < 0)
 		clean_exit(mini, commands, 1);
 	else if (commands.arr[i].pid == 0)
 	{
-		exec_command(commands.arr + i, mini);
-		clean_exit(mini, commands, 1);
+		status = exec_command(commands.arr + i, mini);
+		clean_exit(mini, commands, status);
 	}
 	if (commands.arr[i].fd_in != STDIN_FILENO)
 		close(commands.arr[i].fd_in);

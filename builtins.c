@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:54:10 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/02 15:09:36 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/15 18:34:43 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+int	is_n(char *s)
+{
+	if(s[0] != '-')
+		return (0);
+	while(*(++s))
+		if(*s != 'n')
+			return (0);
+	return (1);
+}
 
 void	echo(t_command *command, t_mini *mini)
 {
@@ -23,17 +33,17 @@ void	echo(t_command *command, t_mini *mini)
 	nl = 1;
 	out = command->fd_out;
 	i = 1;
+	while(command->args[i] && is_n(command->args[i]))
+	{
+		i++;
+		nl = 0;
+	}
 	while (command->args[i])
 	{
-		if (ft_strncmp("-n", command->args[i], 3) == 0)
-			nl = 0;
-		else
-		{
-			if (last)
-				ft_putstr_fd(" ", out);
-			last = 1;
-			ft_putstr_fd(command->args[i], out);
-		}
+		if (last)
+			ft_putstr_fd(" ", out);
+		last = 1;
+		ft_putstr_fd(command->args[i], out);
 		i++;
 	}
 	if (nl)

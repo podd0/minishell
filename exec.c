@@ -3,28 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:17:58 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/08 16:24:37 by epiacent         ###   ########.fr       */
+/*   Updated: 2024/10/15 17:47:29 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	exec_cmd(char **args, t_mini *mini)
+int	exec_cmd(char **args, t_mini *mini)
 {
 	char	*exec;
+	char	*old_exec;
 
+	old_exec = args[0];
 	exec = find_exec(args[0], mini->path);
 	if (!exec)
 	{
-		printf("%s: command not found\n", args[0]);
-		return ;
+		ft_putstr_fd(args[0], 2);
+		ft_putstr_fd(": command not found\n", 2);
+		return (127);
 	}
-	free(args[0]);
 	args[0] = exec;
 	execve(exec, args, mini->env->arr);
+	perror(old_exec);
+	free(old_exec);
+	if(errno == 2)
+		return (127);
+	if(errno == 13)
+		return (126);
+	return (1);
 }
 
 void	clean_exit(t_mini *mini, t_commands commands, int status)
@@ -39,7 +48,7 @@ void	clean_exit(t_mini *mini, t_commands commands, int status)
 	exit(status);
 }
 
-void	exec_command(t_command *command, t_mini *mini)
+int	exec_command(t_command *command, t_mini *mini)
 {
 	if (command->pipe_in)
 	{
@@ -52,7 +61,7 @@ void	exec_command(t_command *command, t_mini *mini)
 	}
 	dup2(command->fd_in, STDIN_FILENO);
 	dup2(command->fd_out, STDOUT_FILENO);
-	exec_cmd(command->args, mini);
+	return (exec_cmd(command->args, mini));
 }
 
 t_builtin	get_builtin(char *cmd)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:59:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/08 16:26:52 by epiacent         ###   ########.fr       */
+/*   Updated: 2024/10/15 17:41:05 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 # include <vector.h>
+# include <errno.h>
 
 # define ARG 1
 # define PIPE 2
@@ -75,7 +76,7 @@ typedef void		(*t_builtin)(t_command *command, t_mini *mini);
 
 char				**get_path(char **env);
 char				*find_exec(char *cmd, char **path);
-void				exec_cmd(char **args, t_mini *mini);
+int					exec_cmd(char **args, t_mini *mini);
 
 char				*subst_env(char *line, char **env, t_mini *mini);
 t_token				*tokenize(char *line, t_mini *mini);
@@ -110,7 +111,7 @@ char				*join_name_value(char *name, char *value);
 char				**split_var(char *key_val);
 int					find_var_index(char *name, t_vstr *env);
 t_builtin			get_builtin(char *cmd);
-void				exec_command(t_command *command, t_mini *mini);
+int					exec_command(t_command *command, t_mini *mini);
 void				pipe_builtin(t_builtin builtin, t_command *command,
 						t_mini *mini);
 void				free_tokens(t_token *token);
