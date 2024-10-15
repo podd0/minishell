@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:33:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/08 17:38:37 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/15 16:45:05 by epiacent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,23 @@ int	here_document(t_command *command, char *separator)
 	return (0);
 }
 
+int open_and_sub(char *filename, int *save_here, int flags)
+{
+	int	fd;
+
+	if(flags == O_RDONLY)
+		fd = open(filename, flags);
+	else
+		fd = open(filename, flags, 0666);
+	if (fd < 0)
+	{
+		perror(filename);
+		return (1);	
+	}
+	*save_here = fd;
+	return (0);	
+}
+
 int	check_type(t_command *command, t_token *tokens, int *i)
 {
 	if (tokens->type == ARG)
@@ -47,13 +64,11 @@ int	check_type(t_command *command, t_token *tokens, int *i)
 			return (1);
 	}
 	else if (tokens->type == IN && !command->has_document)
-		command->fd_in = open(tokens->value, O_RDONLY);
+		return (open_and_sub(tokens->value, &command->fd_in, O_RDONLY));
 	else if (tokens->type == OUT)
-		command->fd_out = open(tokens->value, O_WRONLY | O_CREAT | O_TRUNC,
-				0666);
+		return (open_and_sub(tokens->value, &command->fd_out, O_WRONLY | O_CREAT | O_TRUNC));
 	else if (tokens->type == APPEND)
-		command->fd_out = open(tokens->value, O_WRONLY | O_CREAT | O_APPEND,
-				0666);
+		return (open_and_sub(tokens->value, &command->fd_out, O_WRONLY | O_CREAT | O_APPEND));
 	return (0);
 }
 
@@ -82,11 +97,6 @@ int	check_okay(t_commands commands)
 	i = 0;
 	while (i < commands.size)
 	{
-		if (commands.arr[i].fd_in == -1 || commands.arr[i].fd_out == -1)
-		{
-			perror(NULL);
-			return (0);
-		}
 		if (commands.arr[i].args[0] == NULL)
 		{
 			ft_putendl_fd("Error: malformed command", 2);

@@ -15,7 +15,7 @@ SOURCES  := builtins.c cd.c env.c exec2.c exec.c export.c find_executable.c hand
 OBJECTS = $(SOURCES:.c=.o)
 
 CC = gcc
-CFLAGS = -Wall -Wextra -g -I. -I./libft -Werror  -I/usr/local/include -fsanitize=address
+CFLAGS = -Wall -Wextra -g -I. -I./libft -Werror  -I/usr/local/include #-fsanitize=address
 all: $(NAME)
 
 $(NAME): $(OBJECTS)

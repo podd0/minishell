@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 18:31:38 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/02 15:40:07 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/15 16:12:11 by epiacent         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,10 @@ int	handle_dollar(t_mini *mini, char **env, char *line, t_vch *res)
 	{
 		name = get_var_name(line);
 		len = name->size;
-		vch_cat(res, find_var(name->arr, env));
+		if(len <= 1)
+			vch_push_back(res, '$');
+		else
+			vch_cat(res, find_var(name->arr, env));
 		vch_free(name);
 	}
 	return (len);
