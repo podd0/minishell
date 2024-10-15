@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:01:42 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/02 15:03:21 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/15 18:41:23 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,11 @@ void	cd(t_command *command, t_mini *mini)
 		mini->status_last = cd_core(mini, home_path);
 		if (mini->status_last)
 			perror("cd");
+	}
+	else if(command->args[2])
+	{
+		ft_putendl_fd("cd: too many argmuents", 2);
+		mini->status_last = 1;
 	}
 	else
 	{

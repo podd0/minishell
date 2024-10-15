@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:54:10 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/15 18:34:43 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/15 18:58:51 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	check_good_number(char *str)
 	len = 0;
 	while (' ' == *str)
 		str++;
-	if (*str == '-')
+	if (*str == '-' || *str == '+')
 		str++;
 	while (ft_isdigit(*str))
 	{

@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:06:02 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/15 15:48:48 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/15 19:16:37 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,18 @@ void	export_many_params(t_command *command, t_mini *mini)
 	while (*var)
 	{
 		splitted = split_var(*var);
-		var++;
 		if (!splitted)
+		{
+			ft_putstr_fd("export: '", 2);
+			ft_putstr_fd(*var, 2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
+			mini->status_last = 1;
+			var++;
 			continue ;
-		replace_or_add_variable(splitted, mini, var[-1]);
+		}
+		replace_or_add_variable(splitted, mini, *var);
 		ft_split_free(splitted);
+		var++;
 	}
 }
 
@@ -76,6 +83,7 @@ void	export(t_command *command, t_mini *mini)
 	t_vstr	*copy;
 	int		i;
 	
+	mini->status_last = 0;
 	if (command->args[1])
 	{
 		export_many_params(command, mini);
@@ -86,7 +94,8 @@ void	export(t_command *command, t_mini *mini)
 	i = 0;
 	while (i < copy->size - 1)
 	{
-		printf("declare -x\t%s\n", copy->arr[i]);
+		ft_putstr_fd("declare -x\t", command->fd_out);
+		ft_putendl_fd(copy->arr[i], command->fd_out);
 		i++;
 	}
 	vstr_free(copy);

@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:59:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/15 17:41:05 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/15 19:31:39 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ char				*find_exec(char *cmd, char **path);
 int					exec_cmd(char **args, t_mini *mini);
 
 char				*subst_env(char *line, char **env, t_mini *mini);
-t_token				*tokenize(char *line, t_mini *mini);
+void				tokenize(char *line, t_mini *mini);
 void				free_tokens(t_token *token);
 
 t_commands			to_command_array(t_token *tokens, t_mini *mini);

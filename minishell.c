@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:58:30 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/09 15:47:42 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/15 19:31:02 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	main_func(t_mini *mini, char *input)
 		printf("\n");
 		return (0);
 	}
-	mini->tokens = tokenize(input, mini);
+	tokenize(input, mini);
 	if (!mini->tokens)
 		return (1);
 	

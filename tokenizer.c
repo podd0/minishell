@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:49:23 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/08 16:51:28 by epiacent         ###   ########.fr       */
+/*   Updated: 2024/10/15 19:33:14 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,13 +77,12 @@ t_token	*match_token(char **line, t_mini *mini)
 	return (token);
 }
 
-t_token	*tokenize(char *line, t_mini *mini)
+void	tokenize(char *line, t_mini *mini)
 {
-	t_token	*head;
 	t_token	*tail;
 	t_token	*curr;
 
-	head = NULL;
+	mini->tokens = NULL;
 	tail = NULL;
 	line = skip_whitespace(line);
 	while (*line)
@@ -91,16 +90,18 @@ t_token	*tokenize(char *line, t_mini *mini)
 		curr = match_token(&line, mini);
 		if (!curr)
 			break ;
-		curr->next = NULL;
-		if (!head)
-			head = curr;
-		curr->prev = tail;
-		if (tail)
+		if(curr->type == ARG && ft_strlen(curr->value) == 0)
+			free(curr);
+		else
 		{
-			tail->next = curr;
+			curr->next = NULL;
+			if (!mini->tokens)
+				mini->tokens = curr;
+			curr->prev = tail;
+			if (tail)
+				tail->next = curr;
+			tail = curr;
 		}
-		tail = curr;
 		line = skip_whitespace(line);
 	}
-	return (head);
 }
