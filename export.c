@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:06:02 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/09 15:58:06 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/15 15:48:48 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,5 @@ void	export(t_command *command, t_mini *mini)
 		printf("declare -x\t%s\n", copy->arr[i]);
 		i++;
 	}
+	vstr_free(copy);
 }
