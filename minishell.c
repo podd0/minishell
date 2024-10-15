@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:58:30 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/08 17:09:07 by epiacent         ###   ########.fr       */
+/*   Updated: 2024/10/09 15:47:42 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	init_mini(t_mini *mini, char **env)
 			break ;
 		}
 	}
+	mini->pwd->size = ft_strlen(mini->pwd->arr) + 1;
 }
 
 int	main_func(t_mini *mini, char *input)

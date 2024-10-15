@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:06:02 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/02 15:08:04 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/09 15:58:06 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,20 @@ void	export_many_params(t_command *command, t_mini *mini)
 
 void	export(t_command *command, t_mini *mini)
 {
+	t_vstr	*copy;
+	int		i;
+	
 	if (command->args[1])
 	{
 		export_many_params(command, mini);
 		return ;
 	}
-	merge_sort(mini->env);
-	env(command, mini);
+	copy = vstr_copy(mini->env);
+	merge_sort(copy);
+	i = 0;
+	while (i < copy->size - 1)
+	{
+		printf("declare -x\t%s\n", copy->arr[i]);
+		i++;
+	}
 }
