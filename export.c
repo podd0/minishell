@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:06:02 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/15 19:16:37 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/16 18:25:39 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,10 @@ char	*join_name_value(char *name, char *value)
 	return (res);
 }
 
-void	export_many_params(t_command *command, t_mini *mini)
+void	export_many_params(char **var, t_mini *mini)
 {
-	char	**var;
 	char	**splitted;
 
-	var = command->args + 1;
 	while (*var)
 	{
 		splitted = split_var(*var);
@@ -82,11 +80,12 @@ void	export(t_command *command, t_mini *mini)
 {
 	t_vstr	*copy;
 	int		i;
+	int		eqidx;
 	
 	mini->status_last = 0;
 	if (command->args[1])
 	{
-		export_many_params(command, mini);
+		export_many_params(command->args + 1, mini);
 		return ;
 	}
 	copy = vstr_copy(mini->env);
@@ -95,7 +94,11 @@ void	export(t_command *command, t_mini *mini)
 	while (i < copy->size - 1)
 	{
 		ft_putstr_fd("declare -x\t", command->fd_out);
-		ft_putendl_fd(copy->arr[i], command->fd_out);
+		eqidx = ft_strchr(copy->arr[i], '=') - copy->arr[i];
+		write(command->fd_out, copy->arr[i], eqidx + 1);
+		ft_putchar_fd('"', command->fd_out);
+		ft_putstr_fd(copy->arr[i] + eqidx + 1, command->fd_out);
+		ft_putendl_fd("\"", command->fd_out);
 		i++;
 	}
 	vstr_free(copy);

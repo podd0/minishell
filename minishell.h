@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:59:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/15 19:31:39 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/16 18:26:23 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ void				vch_set_string(t_vch *v, char *s);
 
 void				replace_or_add_variable(char **splitted, t_mini *mini,
 						char *var);
+void				export_many_params(char **var, t_mini *mini);
 char				*join_name_value(char *name, char *value);
 char				**split_var(char *key_val);
 int					find_var_index(char *name, t_vstr *env);

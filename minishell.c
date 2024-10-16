@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:58:30 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/15 19:41:38 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/16 18:35:08 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,35 @@
 
 int		g_signal;
 
+void	set_shlvl(t_mini *mini)
+{
+	char	*clvl;
+	char	*nlvl;
+	char	*arr[2];
+
+	clvl = find_var("SHLVL", mini->env->arr);
+	if (clvl)
+	{
+		nlvl = ft_itoa(ft_atoi(clvl) + 1);
+		arr[0] = ft_strjoin("SHLVL=", nlvl);
+		arr[1] = NULL;
+		export_many_params(arr, mini);
+		free(nlvl);
+		free(arr[0]);
+	}
+	else {
+		arr[0] = "SHLVL=1";
+		arr[1] = NULL;
+		export_many_params(arr, mini);
+	}
+}
+
 void	init_mini(t_mini *mini, char **env)
 {
 	char	*pwd;
 
 	set_env(mini, env);
 	mini->path = get_path(env);
-	pwd = find_var("PWD", env);
 	mini->status_last = 0;
 	mini->pwd = vch_uninit(64);
 	while (1)
@@ -40,6 +62,7 @@ void	init_mini(t_mini *mini, char **env)
 		}
 	}
 	mini->pwd->size = ft_strlen(mini->pwd->arr) + 1;
+	set_shlvl(mini);
 }
 
 int	main_func(t_mini *mini, char *input)

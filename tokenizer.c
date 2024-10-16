@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:49:23 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/15 19:44:43 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/16 17:24:41 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*match_subtoken(char **line, t_mini *mini, t_token *token)
 	}
 	else
 	{
-		subtoken = match_until(line, "\"'\t <>|", 0);
+		subtoken = match_until(line, "\"'\t\a\b\n\v\f\r <>|", 0);
 		if (token->type != DOCUMENT)
 			subtoken = subst_env(subtoken, mini->env->arr, mini);
 	}
