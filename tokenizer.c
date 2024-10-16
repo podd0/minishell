@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:49:23 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/15 19:33:14 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/15 19:44:43 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	tokenize(char *line, t_mini *mini)
 		if (!curr)
 			break ;
 		if(curr->type == ARG && ft_strlen(curr->value) == 0)
-			free(curr);
+			free_tokens(curr);
 		else
 		{
 			curr->next = NULL;

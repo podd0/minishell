@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: epiacent <epiacent@student.42.fr>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 14:33:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/15 16:45:05 by epiacent         ###   ########.fr       */
+/*   Updated: 2024/10/15 20:39:17 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,11 @@ int open_and_sub(char *filename, int *save_here, int flags)
 	if (fd < 0)
 	{
 		perror(filename);
-		return (1);	
+		if(errno == 2)
+			return (127);
+		if(errno == 13)
+			return (126);
+		return (1);
 	}
 	*save_here = fd;
 	return (0);	
@@ -61,7 +65,7 @@ int	check_type(t_command *command, t_token *tokens, int *i)
 	else if (tokens->type == DOCUMENT)
 	{
 		if (here_document(command, tokens->value))
-			return (1);
+			return (2);
 	}
 	else if (tokens->type == IN && !command->has_document)
 		return (open_and_sub(tokens->value, &command->fd_in, O_RDONLY));
@@ -76,17 +80,18 @@ int	make_single_command(t_command *command, t_token *tokens)
 {
 	int	argc;
 	int	i;
+	int	ret;
 
 	i = 0;
 	argc = count_args(tokens);
-	command->args = malloc((argc + 1) * sizeof(char *));
+	command->args = ft_calloc(argc + 1, sizeof(char *));
 	while (tokens && tokens->type != PIPE)
 	{
-		if (check_type(command, tokens, &i))
-			return (1);
+		ret = check_type(command, tokens, &i);
+		if (ret)
+			return (ret);
 		tokens = tokens->next;
 	}
-	command->args[argc] = NULL;
 	return (0);
 }
 
@@ -107,12 +112,24 @@ int	check_okay(t_commands commands)
 	return (1);
 }
 
+t_commands	checks(t_commands commands, t_mini *mini, int count, int status)
+{
+	if (count < 0 || !check_okay(commands))
+	{
+		free_commands(commands);
+		mini->status_last = status;
+		return ((t_commands){NULL, -1});
+	}
+	return (commands);
+}
+
 t_commands	to_command_array(t_token *tokens, t_mini *mini)
 {
 	t_command	*command_arr;
 	int			count;
 	int			i;
 	t_commands	commands;
+	int			ret;
 
 	count = num_commands(tokens);
 	command_arr = init_commands(count);
@@ -120,16 +137,13 @@ t_commands	to_command_array(t_token *tokens, t_mini *mini)
 	commands = (t_commands){command_arr, count};
 	while (i < count)
 	{
-		if (make_single_command(command_arr + i, tokens))
+		ret = make_single_command(command_arr + i, tokens);
+		if (ret == 2)
 			clean_exit(mini, commands, 1);
+		else if (ret != 0)
+			return (checks(commands, mini, -1, ret));
 		tokens = next_command(tokens);
 		i++;
 	}
-	if (!check_okay(commands) || count < 0)
-	{
-		free_commands(commands);
-		mini->status_last = 1;
-		return ((t_commands){NULL, -1});
-	}
-	return (commands);
+	return (checks(commands, mini, count, 1));
 }

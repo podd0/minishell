@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:58:30 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/15 19:31:02 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/15 19:41:38 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,18 @@ int	main_func(t_mini *mini, char *input)
 	}
 	tokenize(input, mini);
 	if (!mini->tokens)
+	{
+		free(input);
 		return (1);
+	}
 	
 	add_history(input);
 	mini->commands = to_command_array(mini->tokens, mini);
 	if (mini->commands.size > 0)
 	{
 		exec_shell_line(mini->commands, mini);
-		free_commands(mini->commands);
 	}
+	free_commands(mini->commands);
 	free_tokens(mini->tokens);
 	free(input);
 	return (1);
