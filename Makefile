@@ -1,7 +1,7 @@
 NAME = minishell
 
-SOURCES  := builtins.c cd.c env.c exec2.c exec.c export.c find_executable.c handlers.c minishell.c parser2.c \
-			parser.c sort.c tokenizer2.c tokenizer.c utils.c var_utils.c libft/ft_atoi.c libft/ft_bzero.c \
+SOURCES  := builtins.c builtins2.c cd.c env.c exec2.c exec.c export.c find_executable.c handlers.c minishell.c parser2.c \
+			parser.c parser3.c sort.c tokenizer2.c tokenizer.c utils.c var_utils.c libft/ft_atoi.c libft/ft_bzero.c \
 			libft/ft_calloc.c libft/ft_isalnum.c libft/ft_isalpha.c libft/ft_isascii.c libft/ft_isdigit.c \
 			libft/ft_isprint.c libft/ft_itoa.c libft/ft_memchr.c libft/ft_memcmp.c libft/ft_memcpy.c \
 			libft/ft_memmove.c libft/ft_memset.c libft/ft_putchar_fd.c libft/ft_putendl_fd.c libft/ft_putnbr_fd.c\
@@ -15,7 +15,7 @@ SOURCES  := builtins.c cd.c env.c exec2.c exec.c export.c find_executable.c hand
 OBJECTS = $(SOURCES:.c=.o)
 
 CC = gcc
-CFLAGS = -Wall -Wextra -g -I. -I./libft -Werror  -I/usr/local/include # -fsanitize=address
+CFLAGS = -Wall -Wextra -g -I. -I./libft -Werror  -I/usr/local/include
 all: $(NAME)
 
 $(NAME): $(OBJECTS)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:17:02 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/15 17:40:44 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/16 20:33:10 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	wait_commands(t_commands commands, t_mini *mini)
 	}
 }
 
-void	exec_commands(t_commands commands, t_mini *mini)
+void	exec_shell_line(t_commands commands, t_mini *mini)
 {
 	int	i;
 	int	*fd;
@@ -83,9 +83,4 @@ void	exec_commands(t_commands commands, t_mini *mini)
 		i++;
 	}
 	wait_commands(commands, mini);
-}
-
-void	exec_shell_line(t_commands commands, t_mini *mini)
-{
-	exec_commands(commands, mini);
 }

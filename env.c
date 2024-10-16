@@ -63,7 +63,7 @@ int	handle_dollar(t_mini *mini, char **env, char *line, t_vch *res)
 	{
 		name = get_var_name(line);
 		len = name->size;
-		if(len <= 1)
+		if (len <= 1)
 			vch_push_back(res, '$');
 		else
 			vch_cat(res, find_var(name->arr, env));

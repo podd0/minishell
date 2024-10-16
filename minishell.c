@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:58:30 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/16 18:35:08 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/16 20:31:21 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ void	set_shlvl(t_mini *mini)
 		free(nlvl);
 		free(arr[0]);
 	}
-	else {
+	else
+	{
 		arr[0] = "SHLVL=1";
 		arr[1] = NULL;
 		export_many_params(arr, mini);
@@ -78,7 +79,6 @@ int	main_func(t_mini *mini, char *input)
 		free(input);
 		return (1);
 	}
-	
 	add_history(input);
 	mini->commands = to_command_array(mini->tokens, mini);
 	if (mini->commands.size > 0)
@@ -90,6 +90,7 @@ int	main_func(t_mini *mini, char *input)
 	free(input);
 	return (1);
 }
+
 void	set_status_if_signal(t_mini *mini)
 {
 	if (g_signal == SIGINT)
@@ -101,9 +102,9 @@ void	set_status_if_signal(t_mini *mini)
 
 int	main(int argc, char **argv, char **env)
 {
-	char				*prompt;
-	t_mini				mini;
-	char				*input;
+	char	*prompt;
+	t_mini	mini;
+	char	*input;
 
 	(void)argc;
 	(void)argv;

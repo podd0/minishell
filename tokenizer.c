@@ -90,7 +90,7 @@ void	tokenize(char *line, t_mini *mini)
 		curr = match_token(&line, mini);
 		if (!curr)
 			break ;
-		if(curr->type == ARG && ft_strlen(curr->value) == 0)
+		if (curr->type == ARG && ft_strlen(curr->value) == 0)
 			free_tokens(curr);
 		else
 		{

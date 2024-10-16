@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 15:01:42 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/16 20:14:53 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/16 20:37:10 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,28 +92,17 @@ int	cd_core(t_mini *mini, char *path)
 	return (0);
 }
 
-void	set_oldpwd(char *old_pwd, t_mini *mini)
-{
-	char	*arr[2];
-
-	arr[0] = ft_strjoin("OLDPWD=", old_pwd);
-	arr[1] = NULL;
-	export_many_params(arr, mini);
-	free(arr[0]);
-	free(old_pwd);
-}
-
 void	cd_one_arg(t_command *command, t_mini *mini, char *old)
 {
-	if(ft_strncmp("-", command->args[1], 2) == 0)
+	if (ft_strncmp("-", command->args[1], 2) == 0)
 	{
-		if(old[0] != '\0')
+		if (old[0] != '\0')
 		{
 			mini->status_last = cd_core(mini, old);
-			if(mini->status_last == 0)
+			if (mini->status_last == 0)
 				ft_putendl_fd(old, command->fd_out);
 		}
-		else 
+		else
 		{
 			ft_putendl_fd("cd: OLDPWD not set", 2);
 			mini->status_last = 1;
@@ -127,7 +116,6 @@ void	cd_one_arg(t_command *command, t_mini *mini, char *old)
 		ft_putstr_fd("cd ", 2);
 		perror(command->args[1]);
 	}
-	
 }
 
 void	cd(t_command *command, t_mini *mini)
@@ -141,7 +129,7 @@ void	cd(t_command *command, t_mini *mini)
 		if (mini->status_last)
 			perror("cd");
 	}
-	else if(command->args[2])
+	else if (command->args[2])
 	{
 		ft_putendl_fd("cd: too many argmuents", 2);
 		mini->status_last = 1;
@@ -152,9 +140,4 @@ void	cd(t_command *command, t_mini *mini)
 	}
 	if (mini->status_last == 0)
 		set_oldpwd(old_pwd, mini);
-}
-
-void	print_pwd(t_command *command, t_mini *mini)
-{
-	ft_putendl_fd(mini->pwd->arr, command->fd_out);
 }

@@ -6,7 +6,7 @@
 /*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 19:59:55 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/16 18:26:23 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/16 20:40:13 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,5 +130,10 @@ void				free_commands(t_commands commands);
 void				sigquit(int signal);
 void				pass(int signal);
 void				crtlc(int signal);
+void				set_oldpwd(char *old_pwd, t_mini *mini);
+t_commands			checks(t_commands commands,
+						t_mini *mini, int count, int status);
+int					check_okay(t_commands commands);
+int					make_single_command(t_command *command, t_token *tokens);
 
 #endif

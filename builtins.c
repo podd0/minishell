@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:54:10 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/15 18:58:51 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/16 20:35:12 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 int	is_n(char *s)
 {
-	if(s[0] != '-')
+	if (s[0] != '-')
 		return (0);
-	while(*(++s))
-		if(*s != 'n')
+	while (*(++s))
+		if (*s != 'n')
 			return (0);
 	return (1);
 }
@@ -33,7 +33,7 @@ void	echo(t_command *command, t_mini *mini)
 	nl = 1;
 	out = command->fd_out;
 	i = 1;
-	while(command->args[i] && is_n(command->args[i]))
+	while (command->args[i] && is_n(command->args[i]))
 	{
 		i++;
 		nl = 0;
@@ -93,18 +93,6 @@ void	mini_exit(t_command *command, t_mini *mini)
 		}
 	}
 	clean_exit(mini, mini->commands, mini->status_last);
-}
-
-void	env(t_command *command, t_mini *mini)
-{
-	int	i;
-
-	i = 0;
-	while (i < mini->env->size - 1)
-	{
-		ft_putendl_fd(mini->env->arr[i], command->fd_out);
-		i++;
-	}
 }
 
 void	unset(t_command *command, t_mini *mini)

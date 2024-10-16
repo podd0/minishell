@@ -24,7 +24,6 @@ int	num_commands(t_token *tokens)
 			if (tokens->next == NULL)
 			{
 				ft_putendl_fd("Error: commands can't end with a pipe", 2);
-
 				return (-1);
 			}
 			count++;

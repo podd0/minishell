@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apuddu <apuddu@student.42roma.it>          +#+  +:+       +#+        */
+/*   By: apuddu <apuddu@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:17:58 by apuddu            #+#    #+#             */
-/*   Updated: 2024/10/15 17:47:29 by apuddu           ###   ########.fr       */
+/*   Updated: 2024/10/16 20:31:02 by apuddu           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ int	exec_cmd(char **args, t_mini *mini)
 	execve(exec, args, mini->env->arr);
 	perror(old_exec);
 	free(old_exec);
-	if(errno == 2)
+	if (errno == 2)
 		return (127);
-	if(errno == 13)
+	if (errno == 13)
 		return (126);
 	return (1);
 }

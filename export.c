@@ -81,7 +81,7 @@ void	export(t_command *command, t_mini *mini)
 	t_vstr	*copy;
 	int		i;
 	int		eqidx;
-	
+
 	mini->status_last = 0;
 	if (command->args[1])
 	{
